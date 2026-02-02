@@ -1,0 +1,26 @@
+generated: 2026-02-02
+project: CityPaper
+project_key: CITYPAPER
+tracking_system: file-system
+story_location: "docs/stories"
+
+development_status:
+  epic-1: backlog
+  1-1-setup-projet-design-system: backlog
+  1-2-galerie-villes-homepage: backlog
+  1-3-recherche-filtrage-instantane: backlog
+  1-4-page-detail-telechargement: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-script-python-generation: backlog
+  2-2-cadrage-intelligent: backlog
+  2-3-integration-cloudflare-r2: backlog
+  2-4-mise-a-jour-git-auto: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-backend-supabase-requests: backlog
+  3-2-formulaire-demande: backlog
+  3-3-worker-polling-notification: backlog
+  epic-3-retrospective: optional
