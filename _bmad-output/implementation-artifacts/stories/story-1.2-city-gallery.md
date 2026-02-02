@@ -55,6 +55,9 @@ Trae AI (Gemini-3-Pro-Preview)
 - Defined `City` type in `src/types/city.ts`.
 - Implemented responsive grid in `src/app/page.tsx` (1 col mobile, 2 cols tablet, 3 cols desktop).
 - Verified build with `pnpm build`.
+- [Refactor] Added `aria-label` to Search Input for accessibility.
+- [Data] Updated `cities.json` with distinct and valid Unsplash images for all 9 cities (resolved redirects to avoid 403 errors).
+- [Fix] Corrected Tailwind v4 syntax for aspect ratio in `CityCard`.
 
 ### File List
 

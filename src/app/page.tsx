@@ -22,12 +22,13 @@ export default function Home() {
           <h1 className="max-w-4xl text-4xl font-black uppercase tracking-tighter md:text-6xl lg:text-7xl">
             Cartes minimalistes <br className="hidden md:block" /> pour vos murs
           </h1>
-          
+
           <div className="w-full max-w-md">
             <Input 
               type="search" 
               placeholder="Rechercher votre ville..." 
               className="h-12 text-lg shadow-sm"
+              aria-label="Rechercher une ville"
             />
           </div>
         </section>
@@ -41,7 +42,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      
+
       {/* Simple Footer */}
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
         <p>&copy; {new Date().getFullYear()} CityPaper. All rights reserved.</p>
