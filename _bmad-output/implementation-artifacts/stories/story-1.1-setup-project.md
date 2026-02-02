@@ -1,6 +1,6 @@
 # Story 1.1: Setup du Projet et Design System
 
-Status: ready-for-dev
+Status: completed
 
 <!-- Note: La validation est optionnelle. Lancez validate-create-story pour un contrôle qualité avant dev-story. -->
 
@@ -20,21 +20,21 @@ Afin d'avoir une base solide et cohérente pour construire les pages.
 
 ## Tâches / Sous-tâches
 
-- [ ] Initialiser le projet Next.js 15 (AC: 1, 2)
-  - [ ] Exécuter `pnpm create next-app@latest`
-  - [ ] Vérifier la structure
-- [ ] Installer et configurer Tailwind CSS 4 (AC: 2)
-  - [ ] Installer les dépendances (utiliser `pnpm`)
-  - [ ] Configurer `globals.css`
-- [ ] Installer et configurer shadcn/ui (AC: 2)
-  - [ ] Exécuter `pnpm dlx shadcn@latest init`
-  - [ ] Vérifier le dossier components
-- [ ] Configurer les polices et couleurs (AC: 3, 4)
-  - [ ] Ajouter la police Inter/Geist
-  - [ ] Mettre à jour la config Tailwind pour les couleurs
-- [ ] Créer le composant Bouton Brutaliste (AC: 5)
-  - [ ] Créer une variante ou un composant personnalisé `components/ui/button.tsx`
-  - [ ] Styler avec noir solide et coins carrés
+- [x] Initialiser le projet Next.js 15 (AC: 1, 2)
+  - [x] Exécuter `pnpm create next-app@latest`
+  - [x] Vérifier la structure
+- [x] Installer et configurer Tailwind CSS 4 (AC: 2)
+  - [x] Installer les dépendances (utiliser `pnpm`)
+  - [x] Configurer `globals.css`
+- [x] Installer et configurer shadcn/ui (AC: 2)
+  - [x] Exécuter `pnpm dlx shadcn@latest init`
+  - [x] Vérifier le dossier components
+- [x] Configurer les polices et couleurs (AC: 3, 4)
+  - [x] Ajouter la police Inter/Geist
+  - [x] Mettre à jour la config Tailwind pour les couleurs
+- [x] Créer le composant Bouton Brutaliste (AC: 5)
+  - [x] Créer une variante ou un composant personnalisé `components/ui/button.tsx`
+  - [x] Styler avec noir solide et coins carrés
 
 ## Notes de Développement
 
@@ -60,6 +60,21 @@ Trae AI (Gemini-3-Pro-Preview)
 
 ### Debug Log References
 
+- Build passed successfully with Next.js 16.1.6 and React 19.2.3
+- Tailwind 4 configured via CSS variables in globals.css
+
 ### Completion Notes List
 
+- Validated environment: Node.js and pnpm present.
+- Initialized Next.js project with App Router and TypeScript.
+- Configured Tailwind CSS v4 with brutalist color scheme (Black/White).
+- Configured Geist fonts in layout.tsx.
+- Created Brutalist Button component (square corners, solid black).
+- Validated build with `pnpm build`.
+
 ### File List
+
+- src/app/layout.tsx
+- src/app/globals.css
+- src/components/ui/button.tsx
+- package.json
