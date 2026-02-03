@@ -3,4 +3,5 @@ export interface City {
   name: string;
   country: string;
   image: string;
+  coordinates: string;
 }

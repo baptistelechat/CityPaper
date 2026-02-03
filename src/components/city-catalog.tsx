@@ -2,15 +2,9 @@
 
 import { CityCard } from "@/components/city-card";
 import { Input } from "@/components/ui/input";
+import type { City } from "@/types/city";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-
-export interface City {
-  id: string;
-  name: string;
-  country: string;
-  image: string;
-}
 
 interface CityCatalogProps {
   cities: City[];

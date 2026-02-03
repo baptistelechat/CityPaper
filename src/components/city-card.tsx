@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { City } from "@/types/city";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CityCardProps {
   city: City;
@@ -9,9 +10,10 @@ interface CityCardProps {
 
 export function CityCard({ city, className }: CityCardProps) {
   return (
-    <div
+    <Link
+      href={`/city/${city.id}`}
       className={cn(
-        "group relative aspect-5/7 overflow-hidden bg-muted",
+        "group relative aspect-5/7 overflow-hidden bg-muted block",
         className,
       )}
     >
@@ -29,6 +31,6 @@ export function CityCard({ city, className }: CityCardProps) {
           {city.country}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

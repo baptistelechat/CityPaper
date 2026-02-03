@@ -3,54 +3,63 @@
     "id": "paris",
     "name": "Paris",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1694716021376-d44da3f54e8a?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1694716021376-d44da3f54e8a?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "48.8566°, 2.3522°"
   },
   {
     "id": "lyon",
     "name": "Lyon",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1553700477-0ff02310c76f?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1553700477-0ff02310c76f?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "45.7578°, 4.8320°"
   },
   {
     "id": "marseille",
     "name": "Marseille",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1632051420752-da75c3960456?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1632051420752-da75c3960456?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "43.2965°, 5.3698°"
   },
   {
     "id": "bordeaux",
     "name": "Bordeaux",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1541268968750-3cdef71e153f?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1541268968750-3cdef71e153f?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "44.8378°, 0.5792°"
   },
   {
     "id": "lille",
     "name": "Lille",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1694637173083-d8dcdee5df74?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1694637173083-d8dcdee5df74?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "50.6292°, 3.0573°"
   },
   {
     "id": "strasbourg",
     "name": "Strasbourg",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1562570117-b162f7c85e36?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1562570117-b162f7c85e36?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "48.5734°, 7.7521°"
   },
   {
     "id": "nice",
     "name": "Nice",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1761386017822-0d9d41fd5725?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1761386017822-0d9d41fd5725?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "43.7102°, 7.2620°"
   },
   {
     "id": "toulouse",
     "name": "Toulouse",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1596965420825-0281404464b7?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1596965420825-0281404464b7?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "43.6047°, 1.4442°"
   },
   {
     "id": "nantes",
     "name": "Nantes",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1597225729909-31db3b6bf1c7?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
+    "image": "https://images.unsplash.com/photo-1597225729909-31db3b6bf1c7?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
+    "coordinates": "47.2184°, 1.5536°"
   }
 ]

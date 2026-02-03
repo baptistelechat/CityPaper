@@ -1,6 +1,6 @@
 # Story 1.4: Page Détail Ville et Téléchargement
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: La validation est optionnelle. Lancez validate-create-story pour un contrôle qualité avant dev-story. -->
 
@@ -20,20 +20,20 @@ Afin de l'imprimer ou de le sauvegarder.
 
 ## Tâches / Sous-tâches
 
-- [ ] Créer la route dynamique (AC: 1, 5)
-  - [ ] Créer `src/app/city/[id]/page.tsx` (utiliser `id` comme slug).
-  - [ ] Importer `cities` depuis `@/data/cities.json`.
-  - [ ] Implémenter `generateStaticParams` pour le rendu statique (SSG) de toutes les villes connues.
-  - [ ] Gérer le cas "Ville non trouvée" (notFound()).
-- [ ] UI Page Détail (AC: 2, 4)
-  - [ ] Layout responsive : Image à gauche (ou haut mobile), infos et actions à droite (ou bas mobile).
-  - [ ] Afficher l'image en grand avec `next/image` (priority=true).
-  - [ ] Bouton "Retour" (Link vers `/`).
-- [ ] Actions de Téléchargement (AC: 3)
-  - [ ] Boutons "Télécharger PDF" et "Télécharger JPG" (shadcn Button).
-  - [ ] Mock : Liens vers l'URL de l'image (ou `#`) avec attribut `download` si possible.
-- [ ] Mettre à jour `CityCard` (AC: 1)
-  - [ ] Envelopper la carte ou ajouter un lien vers `/city/[id]`.
+- [x] Créer la route dynamique (AC: 1, 5)
+  - [x] Créer `src/app/city/[id]/page.tsx` (utiliser `id` comme slug).
+  - [x] Importer `cities` depuis `@/data/cities.json`.
+  - [x] Implémenter `generateStaticParams` pour le rendu statique (SSG) de toutes les villes connues.
+  - [x] Gérer le cas "Ville non trouvée" (notFound()).
+- [x] UI Page Détail (AC: 2, 4)
+  - [x] Layout responsive : Image à gauche (ou haut mobile), infos et actions à droite (ou bas mobile).
+  - [x] Afficher l'image en grand avec `next/image` (priority=true).
+  - [x] Bouton "Retour" (Link vers `/`).
+- [x] Actions de Téléchargement (AC: 3)
+  - [x] Boutons "Télécharger PDF" et "Télécharger JPG" (shadcn Button).
+  - [x] Mock : Liens vers l'URL de l'image (ou `#`) avec attribut `download` si possible.
+- [x] Mettre à jour `CityCard` (AC: 1)
+  - [x] Envelopper la carte ou ajouter un lien vers `/city/[id]`.
 
 ## Notes de Développement
 
@@ -50,3 +50,6 @@ Afin de l'imprimer ou de le sauvegarder.
 - `src/components/city-card.tsx`
 
 ### Review Notes
+
+Implemented city detail page with SSG, responsive layout, download buttons (mock), and back navigation. Updated CityCard to link to detail page.
+Verified build with `pnpm build` (Next.js 16.1.6).
