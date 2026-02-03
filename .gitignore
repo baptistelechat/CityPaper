@@ -42,3 +42,9 @@ next-env.d.ts
 
 #grepai
 /.grepai
+
+# worker
+worker/maptoposter/
+worker/__pycache__/
+worker/*.venv/
+.gitignore
