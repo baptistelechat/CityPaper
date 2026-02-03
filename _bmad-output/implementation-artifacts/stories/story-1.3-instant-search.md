@@ -1,6 +1,6 @@
 # Story 1.3: Recherche et Filtrage Instantané
 
-Status: ready-for-review
+Status: done
 
 <!-- Note: La validation est optionnelle. Lancez validate-create-story pour un contrôle qualité avant dev-story. -->
 
@@ -33,3 +33,13 @@ Afin de trouver rapidement si ma ville est disponible sans scroller.
 - **Performance** : Le filtrage côté client est suffisant pour < 100 villes. Pas besoin de debounce complexe pour l'instant.
 - **UX** : Ajouter un placeholder explicite (ex: "Rechercher une ville...").
 - **Accessibilité** : S'assurer que le champ a un label (visible ou `aria-label`).
+
+## Dev Agent Record
+
+### File List
+- `src/components/city-catalog.tsx`
+- `src/components/ui/input.tsx`
+
+### Review Notes
+- Tests unitaires ignorés sur demande utilisateur ("pas de test unitaire").
+- Implémentation réalisée dans `CityCatalog` au lieu de `page.tsx` pour une meilleure encapsulation.
