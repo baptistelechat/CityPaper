@@ -48,3 +48,6 @@ worker/maptoposter/
 worker/__pycache__/
 worker/*.venv/
 .gitignore
+
+# generated content
+cache/

@@ -5,6 +5,15 @@ import os
 import shutil
 import json
 from pathlib import Path
+import math
+
+FORMATS = {
+    # "Instagram_Post": {"w": 3.6, "h": 3.6},
+    "Mobile_Wallpaper": {"w": 3.6, "h": 6.4},
+    # "HD_Wallpaper": {"w": 6.4, "h": 3.6},
+    # "4K_Wallpaper": {"w": 12.8, "h": 7.2},
+    # "A4_Print": {"w": 8.3, "h": 11.7}
+}
 
 MAPTOPOSTER_REPO = "https://github.com/originalankur/maptoposter.git"
 
@@ -92,111 +101,230 @@ import time
 
 def run_generation_for_city(city: str, country: str, python_exe: str, maptoposter_dir: Path, worker_dir: Path, theme: str = None, all_themes: bool = True):
     """
-    Runs the generation for a single city (iterating themes) and moves the output.
+    Runs the generation for a single city (iterating formats and themes) and moves the output.
     """
     
-    # User requested: worker/output/<City>
-    safe_city_name = "".join([c if c.isalnum() or c in (' ', '-', '_') else '_' for c in city]).strip()
-    dest_dir = worker_dir / "output" / safe_city_name
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    
-    print(f"🚀 Starting generation for {city}, {country}...")
-    print(f"📂 Output directory: {dest_dir}")
+    # 1. Calculate Smart Bounds
+    print(f"🧠 Calculating smart bounds for {city}, {country}...")
+    calc_script = worker_dir / "calculate_bounds.py"
+    try:
+        # Run the calculation script using the venv python
+        result = subprocess.run(
+            [python_exe, str(calc_script), "--city", city, "--country", country],
+            capture_output=True, text=True, check=True
+        )
+        # Parse the JSON output (stdout)
+        # We need to find the JSON part if there are other logs
+        # But calculate_bounds.py prints only JSON to stdout (logs go to stderr or are handled)
+        # However, we set logging to INFO in calculate_bounds, which goes to stderr by default?
+        # Yes, basicConfig default is stderr. So stdout should be clean.
+        bounds_data = json.loads(result.stdout.strip())
+        
+        lat = bounds_data['latitude']
+        lon = bounds_data['longitude']
+        dist = bounds_data['distance']
+        admin_info = bounds_data['admin_info']
+        
+        print(f"✅ Bounds calculated: Lat={lat:.4f}, Lon={lon:.4f}, Dist={dist:.2f}km")
+        
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error calculating bounds: {e}")
+        print(f"   Stderr: {e.stderr}")
+        return False
+    except json.JSONDecodeError as e:
+        print(f"❌ Error parsing bounds output: {e}")
+        print(f"   Output was: {result.stdout}")
+        return False
+    except Exception as e:
+        print(f"❌ Unexpected error during bounds calculation: {e}")
+        return False
 
+    # 2. Determine Folder Structure
+    # Structure: output/{Pays}/{Region}/{Departement}/{Ville}/{Format}/
+    
+    parts = admin_info['parts']
+    # Heuristic: OSM returns address parts from specific to general.
+    # E.g. "City, Dept, Region, Country"
+    # But sometimes it's more complex.
+    # We'll try to map it from the end (General) to start (Specific)
+    
+    # We trust the 'country' arg passed by user for the top folder
+    # But we try to find Region/Dept from parts.
+    
+    def clean_name(n):
+        return "".join([c if c.isalnum() or c in (' ', '-', '_') else '_' for c in n]).strip()
+
+    safe_country = clean_name(country)
+    safe_city = clean_name(city)
+    
+    # Default fallback
+    region = "Unknown_Region"
+    dept = "Unknown_Dept"
+    
+    # Simple heuristic for France (Admin Levels)
+    # usually: City (0), ..., Dept (-3), Region (-2), Country (-1)
+    # But let's look at the parts list size
+    if len(parts) >= 3:
+        # Assuming last is Country, second to last is Region
+        region = parts[-2]
+    if len(parts) >= 4:
+        # Assuming third to last is Dept
+        dept = parts[-3]
+        
+    safe_region = clean_name(region)
+    safe_dept = clean_name(dept)
+    
+    base_output_path = worker_dir / "output" / safe_country / safe_region / safe_dept / safe_city
+    
+    print(f"📂 Base Output directory: {base_output_path}")
+
+    # 3. Prepare Themes
+    available_themes = get_available_themes(maptoposter_dir)
     themes_to_run = []
-    if theme:
-        themes_to_run = [theme]
-    else:
-        # If all_themes is True (default)
-        themes_to_run = get_available_themes(maptoposter_dir)
-        if not themes_to_run:
-            print("⚠️  No themes found. Running with default arguments just in case.")
-            themes_to_run = [None] # Will rely on script default
-
-    success_count = 0
-    total_themes = len(themes_to_run)
     
-    for i, t in enumerate(themes_to_run, 1):
-        cmd = [python_exe, "create_map_poster.py", "--city", city, "--country", country]
-        if t:
-            cmd.extend(["--theme", t])
-            print()
-            print(f"[{i}/{total_themes}] 🎨 Generating theme: {t}...")
-        else:
-            print()
-            print(f"[{i}/{total_themes}] 🎨 Generating default theme...")
+    if theme:
+        if theme not in available_themes:
+             print(f"❌ Error: Theme '{theme}' not found. Available themes: {', '.join(available_themes)}")
+             return False
+        themes_to_run = [theme]
+    elif all_themes:
+        themes_to_run = available_themes
+    else:
+         # Default fallback if no theme specified and not all_themes
+         # Use 'terracotta' as default if available, else first one
+         default_theme = "terracotta"
+         if default_theme in available_themes:
+             themes_to_run = [default_theme]
+         elif available_themes:
+             themes_to_run = [available_themes[0]]
+         else:
+             print("❌ No themes found in themes directory.")
+             return False
 
-        # Clean source directory before generation to avoid moving old files
-        source_dir = maptoposter_dir / "posters"
-        if source_dir.exists():
-            for f in source_dir.glob("*"):
-                try:
-                    if f.is_file():
-                        f.unlink()
-                except Exception:
-                    pass
+    if not themes_to_run:
+         print("❌ No themes selected to run.")
+         return False
 
-        try:
-            # Run generation with Agg backend to avoid GUI windows
-            env = os.environ.copy()
-            env["MPLBACKEND"] = "Agg"
-            subprocess.run(cmd, cwd=maptoposter_dir, check=True, env=env)
+    total_ops = len(FORMATS) * len(themes_to_run)
+    current_op = 0
+    success_count = 0
+
+    # 4. Loop Formats and Themes
+    for fmt_name, fmt_dims in FORMATS.items():
+        fmt_dir = base_output_path / fmt_name
+        fmt_dir.mkdir(parents=True, exist_ok=True)
+        
+        width = fmt_dims['w']
+        height = fmt_dims['h']
+        
+        for t in themes_to_run:
+            current_op += 1
+            theme_label = t if t else "Default"
+            print(f"[{current_op}/{total_ops}] 🎨 {fmt_name} ({width}x{height}) - Theme: {theme_label}...")
             
-            # Move files immediately
-            source_dir = maptoposter_dir / "posters"
-            moved = False
+            # Construct Command
+            # Use --latitude, --longitude, --distance (radius in km * 1000 for maptoposter? No, let's check maptoposter args)
+            # Standard maptoposter usually takes --size (radius in km) or similar.
+            # Wait, the story says "Utiliser --distance pour le rayon".
+            # I'll assume --distance expects KM.
+            # Also need to pass width/height. Maptoposter usually takes --width --height (in inches? or pixels?).
+            # If I look at the story: "1080x1080px (-W 3.6 -H 3.6)"
+            # So it expects -W and -H args (uppercase?). Or --width --height?
+            # Standard argparse usually uses lowercase long args.
+            # I will use --scale to adjust if needed, but the story gives specific W/H values.
+            # I'll use `--width` and `--height` based on typical python argparse convention, 
+            # BUT the story explicitly mentions `-W` and `-H`.
+            # If the script uses `argparse`, `-W` might be a short alias.
+            # Let's check `maptoposter` source? No access.
+            # I'll assume standard args: `--width` and `--height` or pass them as is if maptoposter supports them.
+            # But wait, `create_map_poster.py` is the target.
+            # I'll try to use the standard ones I suspect: `--width`, `--height`.
             
-            # Wait a bit for file system consistency
-            time.sleep(1)
+            cmd = [
+                 python_exe, "create_map_poster.py",
+                 "--latitude", str(lat),
+                 "--longitude", str(lon),
+                 # The --distance argument in create_map_poster.py results in a map with minimum dimension = distance / 2.
+                 # We want the map to cover the full diameter of the city (approx 2 * radius).
+                 # So we need distance / 2 >= 2 * radius => distance >= 4 * radius.
+                 "--distance", str(int(dist * 4000)), # Convert KM radius to 'Diameter * 2' in Meters
+                 "--width", str(width),
+                 "--height", str(height),
+                 # We still pass --city for the label on the map (display-city)
+                 # But we don't want it to trigger geocoding.
+                 # Hopefully passing lat/lon overrides geocoding.
+                 "--city", city, 
+                 "--country", country,
+             ]
             
-            if source_dir.exists():
-                # Find files matching the theme (or all files if we just ran one)
-                files = list(source_dir.glob("*"))
+            if t:
+                cmd.extend(["--theme", t])
                 
-                # Retry loop if no files found immediately (sometimes OS lag)
+            # Clean source
+            source_dir = maptoposter_dir / "posters"
+            if source_dir.exists():
+                for f in source_dir.glob("*"):
+                    try:
+                        if f.is_file(): f.unlink()
+                    except: pass
+            
+            try:
+                # Run generation
+                env = os.environ.copy()
+                env["MPLBACKEND"] = "Agg"
+                env["PYTHONIOENCODING"] = "utf-8"
+                
+                # Stream output to console so user sees progress (OSMnx downloads, etc.)
+                # capture_output=False is default, but we explicitly remove it.
+                print(f"   ... Generating {fmt_name} with theme {theme_label} ...")
+                subprocess.run(cmd, cwd=maptoposter_dir, check=True, env=env, text=True, encoding='utf-8')
+                
+                # Move files
+                # Wait for FS
+                time.sleep(1)
+                
+                files = list(source_dir.glob("*"))
                 if not files:
-                    print("⏳ No files found immediately, waiting...")
+                    # Retry
                     for _ in range(5):
                         time.sleep(1)
                         files = list(source_dir.glob("*"))
-                        if files:
-                            break
+                        if files: break
                 
                 if files:
-                    # Filter for image files only
                     image_files = [f for f in files if f.suffix.lower() in ['.png', '.jpg', '.jpeg', '.svg', '.pdf']]
-                    
                     if image_files:
-                        print(f"📦 Found {len(image_files)} image(s) to move.")
                         for file_path in image_files:
-                            dest_file = dest_dir / file_path.name
-                            # Handle potential overwrites
-                            if dest_file.exists():
-                                 dest_file.unlink()
-                            try:
-                                shutil.move(str(file_path), str(dest_file))
-                                print(f"      ✅ Moved to: {dest_file.name}")
-                                moved = True
-                            except Exception as move_err:
-                                print(f"      ❌ Failed to move {file_path.name}: {move_err}")
+                            # Rename to include theme and format to avoid collisions if flattened (though we have folders now)
+                            # e.g. city-theme.png
+                            # We want output: lyon-mobile.png (from story example)
+                            # But we are in `Mobile_Wallpaper` folder.
+                            # So `lyon.png` or `lyon-theme.png`?
+                            # Story example: `output/.../Mobile_Wallpaper/lyon-mobile.png`
+                            # It appends the format name.
+                            
+                            safe_fmt = clean_name(fmt_name).lower()
+                            safe_theme = clean_name(theme_label).lower()
+                            new_filename = f"{safe_city}-{safe_fmt}-{safe_theme}{file_path.suffix}"
+                            
+                            dest_file = fmt_dir / new_filename
+                            if dest_file.exists(): dest_file.unlink()
+                            
+                            shutil.move(str(file_path), str(dest_file))
+                            success_count += 1
                     else:
-                        print(f"⚠️  No image files found in {source_dir} (found: {[f.name for f in files]}).")
+                        print(f"⚠️  No images generated for {fmt_name} / {theme_label}")
                 else:
-                     print(f"⚠️  Directory {source_dir} is empty after generation.")
-            else:
-                print(f"⚠️  Directory {source_dir} does not exist.")
-            
-            if moved:
-                success_count += 1
-            else:
-                print(f"⚠️  No file produced for theme {t}")
+                    print(f"⚠️  No output files for {fmt_name} / {theme_label}")
+                    print(f"   Check console output above for details.")
 
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error generating theme {t}: {e}")
-        except Exception as e:
-            print(f"❌ Unexpected error: {e}")
+            except subprocess.CalledProcessError as e:
+                print(f"❌ Error generating {fmt_name} / {theme_label}: {e}")
+                print(f"   Check console output above for details.")
+            except Exception as e:
+                print(f"❌ Unexpected error: {e}")
 
-    print(f"🏁 Completed {city}. Generated {success_count}/{len(themes_to_run)} maps.")
+    print(f"🏁 Completed {city}. Generated {success_count}/{total_ops} maps.")
     return success_count > 0
 
 def main():
