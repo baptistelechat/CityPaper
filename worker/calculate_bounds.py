@@ -40,8 +40,8 @@ def calculate_bounds(city, country):
         # Calculate diagonal distance from center to corner
         radius_km = geodesic(center, corner).km
         
-        # Add padding (10%)
-        radius_km_padded = radius_km * 1.1
+        # Add padding (5%)
+        radius_km_padded = radius_km * 1.05
         
         logger.info(f"📍 Center: {center_lat}, {center_lon}")
         logger.info(f"📏 Radius: {radius_km:.2f} km (Padded: {radius_km_padded:.2f} km)")
