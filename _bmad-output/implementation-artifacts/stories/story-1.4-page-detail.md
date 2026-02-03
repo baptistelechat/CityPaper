@@ -1,6 +1,6 @@
 # Story 1.4: Page Détail Ville et Téléchargement
 
-Status: review
+Status: done
 
 <!-- Note: La validation est optionnelle. Lancez validate-create-story pour un contrôle qualité avant dev-story. -->
 
