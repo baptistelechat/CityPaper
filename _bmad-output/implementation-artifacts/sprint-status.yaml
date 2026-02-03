@@ -39,7 +39,7 @@ development_status:
   1-2-galerie-villes-homepage: done
   1-3-recherche-filtrage-instantane: done
   1-4-page-detail-telechargement: done
-  epic-1-retrospective: optional
+  epic-1-retrospective: done
 
   epic-2: backlog
   2-1-script-python-generation: backlog
