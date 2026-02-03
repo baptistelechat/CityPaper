@@ -1,6 +1,5 @@
-import { CityCard } from "@/components/city-card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { CityCatalog } from "@/components/city-catalog";
 import cities from "@/data/cities.json";
 
 export default function Home() {
@@ -17,30 +16,7 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center gap-8 px-4 py-20 text-center md:py-32">
-          <h1 className="max-w-4xl text-4xl font-black uppercase tracking-tighter md:text-6xl lg:text-7xl">
-            Cartes minimalistes <br className="hidden md:block" /> pour vos murs
-          </h1>
-
-          <div className="w-full max-w-md">
-            <Input 
-              type="search" 
-              placeholder="Rechercher votre ville..." 
-              className="h-12 text-lg shadow-sm"
-              aria-label="Rechercher une ville"
-            />
-          </div>
-        </section>
-
-        {/* Grid Section */}
-        <section className="container mx-auto px-4 pb-24 md:px-6">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
-            {cities.map((city) => (
-              <CityCard key={city.id} city={city} />
-            ))}
-          </div>
-        </section>
+        <CityCatalog cities={cities} />
       </main>
 
       {/* Simple Footer */}

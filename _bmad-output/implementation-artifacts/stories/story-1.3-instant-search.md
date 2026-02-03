@@ -1,6 +1,6 @@
 # Story 1.3: Recherche et Filtrage Instantané
 
-Status: ready-for-dev
+Status: ready-for-review
 
 <!-- Note: La validation est optionnelle. Lancez validate-create-story pour un contrôle qualité avant dev-story. -->
 
@@ -18,14 +18,14 @@ Afin de trouver rapidement si ma ville est disponible sans scroller.
 
 ## Tâches / Sous-tâches
 
-- [ ] Ajouter le composant Input (AC: 1)
-  - [ ] Installer/Vérifier `shadcn/ui` Input (`npx shadcn@latest add input`)
-  - [ ] Ajouter un champ de recherche au-dessus de la grille dans `src/app/page.tsx`
-- [ ] Implémenter la logique de filtrage (AC: 1, 2)
-  - [ ] Ajouter un état `searchQuery` avec `useState`
-  - [ ] Filtrer la liste `cities` en fonction du nom (insensible à la casse)
-- [ ] Gérer l'état vide (AC: 3)
-  - [ ] Si la liste filtrée est vide, afficher un message centré "Aucune ville trouvée"
+- [x] Ajouter le composant Input (AC: 1)
+  - [x] Installer/Vérifier `shadcn/ui` Input (`npx shadcn@latest add input`)
+  - [x] Ajouter un champ de recherche au-dessus de la grille dans `src/app/page.tsx`
+- [x] Implémenter la logique de filtrage (AC: 1, 2)
+  - [x] Ajouter un état `searchQuery` avec `useState`
+  - [x] Filtrer la liste `cities` en fonction du nom (insensible à la casse)
+- [x] Gérer l'état vide (AC: 3)
+  - [x] Si la liste filtrée est vide, afficher un message centré "Aucune ville trouvée"
 
 ## Notes de Développement
 
