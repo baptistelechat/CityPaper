@@ -211,6 +211,12 @@ def main():
 
     # Determine paths
     worker_dir = Path(__file__).parent.absolute()
+
+    # 0. Check Python version
+    if sys.version_info < (3, 11):
+        print("❌ Error: Python 3.11+ is required.")
+        sys.exit(1)
+
     maptoposter_dir = worker_dir / "maptoposter"
     script_path = maptoposter_dir / "create_map_poster.py"
 
@@ -253,7 +259,7 @@ def main():
                 
                 run_generation_for_city(city_name, country_name, python_exe, maptoposter_dir, worker_dir, args.theme, args.all_themes or True)
             
-            print(f"� Batch processing complete.")
+            print("✅ Batch processing complete.")
             
         except Exception as e:
             print(f"❌ Error processing JSON: {e}")

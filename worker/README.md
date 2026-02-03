@@ -35,4 +35,4 @@ Par défaut, cela générera **tous les thèmes** disponibles.
 ## Résultat
 
 Les fichiers générés (PNG) seront automatiquement déplacés dans :
-`output/maps/` (à la racine du projet)
+`worker/output/<Nom_Ville>/` (dans le dossier du worker)
