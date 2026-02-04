@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 def get_project_root():
     # worker/src/db.py -> worker/src -> worker -> PROJECT_ROOT
@@ -99,7 +99,7 @@ def update_city_entry(city_name, country_name, uploaded_urls, admin_info):
         "country": country_name,
         "admin_info": admin_info,
         "maps": maps_structure,
-        "last_updated": datetime.utcnow().isoformat() + "Z",
+        "last_updated": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "status": "published"
     }
     
