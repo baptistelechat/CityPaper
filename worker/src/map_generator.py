@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 from .config import FORMATS
 from .setup_env import get_available_themes
+from .storage import HuggingFaceClient
 
 def clean_name(n):
     return "".join([c if c.isalnum() or c in (' ', '-', '_') else '_' for c in n]).strip()
@@ -293,4 +294,67 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
                         print(f"   ❌ Failed after {max_retries} attempts.")
 
     print(f"🏁 Completed {city}. Generated {success_count}/{total_ops} maps.")
+
+    # HF Upload
+    if success_count > 0:
+        print("☁️  Starting upload to Hugging Face...")
+        hf = HuggingFaceClient()
+        output_root = worker_dir / "output"
+        
+        try:
+            relative_prefix = base_output_path.relative_to(output_root)
+            hf_prefix = relative_prefix.as_posix()
+        except ValueError:
+             hf_prefix = f"{clean_name(country)}/{clean_name(city)}"
+             
+        print(f"📦 Uploading to HF prefix: {hf_prefix}")
+        
+        # Construct detailed location string for commit message
+        location_parts = []
+        if admin_info and 'structured' in admin_info:
+            s = admin_info['structured']
+            # Order: Country / Region / State / County / Postcode / City (or Town/Village)
+            # We use the raw values for a pretty commit message
+            keys_to_check = ['country', 'region', 'state', 'county', 'postcode', 'city', 'town', 'village']
+            for key in keys_to_check:
+                val = s.get(key)
+                if val and val not in location_parts:
+                    location_parts.append(val)
+        
+        if location_parts:
+            location_str = "_".join(location_parts)
+        else:
+            # Fallback to display names
+            location_str = f"{display_country}_{display_city}"
+
+        commit_msg = f"🖼️ Add maps for {location_str}"
+        uploaded_urls = hf.upload_directory(base_output_path, hf_prefix, commit_message=commit_msg)
+        
+        if uploaded_urls:
+            print("🚀 HF Upload Summary:")
+            for path, url in uploaded_urls.items():
+                print(f"   - {path}: {url}")
+            
+            # Auto-purge logic
+            try:
+                # IMPORTANT: Only purge the specific city folder we just generated and uploaded
+                # NEVER delete the entire output_root or "demo" folder
+                if base_output_path.exists() and "demo" not in base_output_path.parts:
+                    print(f"🧹 Purging local cache for {city} to free up space...")
+                    shutil.rmtree(base_output_path)
+                    
+                    # Also remove empty parent directories up to 'output'
+                    parent = base_output_path.parent
+                    while parent != output_root and parent != worker_dir:
+                        try:
+                            parent.rmdir() # Only removes if empty
+                            parent = parent.parent
+                        except OSError:
+                            # Directory not empty or other error
+                            break
+                            
+                    print("✅ Local cache cleared.")
+            except Exception as e:
+                print(f"⚠️  Failed to purge local cache: {e}")
+
     return success_count > 0

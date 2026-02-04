@@ -1,3 +1,7 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 FORMATS = {
     "Instagram_Post": {"w": 3.6, "h": 3.6},
@@ -8,3 +12,6 @@ FORMATS = {
 }
 
 MAPTOPOSTER_REPO = "https://github.com/originalankur/maptoposter.git"
+
+HF_TOKEN = os.getenv("HF_TOKEN")
+HF_REPO_ID = os.getenv("HF_REPO_ID", "Baptiste/citypaper-maps")
