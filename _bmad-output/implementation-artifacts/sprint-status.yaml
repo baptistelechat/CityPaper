@@ -41,12 +41,12 @@ development_status:
   1-4-page-detail-telechargement: done
   epic-1-retrospective: done
 
-  epic-2: backlog
-  2-1-script-python-generation: backlog
-  2-2-cadrage-intelligent: backlog
-  2-3-integration-cloudflare-r2: backlog
-  2-4-mise-a-jour-git-auto: backlog
-  epic-2-retrospective: optional
+  epic-2: done
+  2-1-script-python-generation: done
+  2-2-cadrage-intelligent: done
+  2-3-integration-cloudflare-r2: done
+  2-4-mise-a-jour-git-auto: done
+  epic-2-retrospective: done
 
   epic-3: backlog
   3-1-backend-supabase-requests: backlog

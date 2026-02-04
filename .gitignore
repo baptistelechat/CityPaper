@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -42,3 +43,15 @@ next-env.d.ts
 
 #grepai
 /.grepai
+
+# worker
+worker/maptoposter/
+__pycache__/
+worker/*.venv/
+.gitignore
+worker/output/*
+!worker/output/demo/
+
+# generated content
+cache/
+.grepai/
