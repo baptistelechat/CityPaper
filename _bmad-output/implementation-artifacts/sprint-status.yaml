@@ -43,7 +43,7 @@ development_status:
 
   epic-2: in-progress
   2-1-script-python-generation: done
-  2-2-cadrage-intelligent: ready-for-dev
+  2-2-cadrage-intelligent: review
   2-3-integration-cloudflare-r2: backlog
   2-4-mise-a-jour-git-auto: backlog
   epic-2-retrospective: optional

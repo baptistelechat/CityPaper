@@ -17,7 +17,7 @@ Afin d'obtenir des fichiers prêts à l'emploi pour Instagram, le Print et les W
 
 - [ ] **Récupération BBox** : Le script récupère la Bounding Box administrative (via `osmnx` ou Overpass) pour obtenir `(north, south, east, west)`.
 - [ ] **Calcul Centre** : Détermine le centre géographique : `lat = (north + south) / 2`, `lon = (east + west) / 2`.
-- [ ] **Calcul Distance** : Calcule la distance (rayon) nécessaire pour couvrir la diagonale de la BBox + une marge (padding) de ~10%.
+- [ ] **Calcul Distance** : Calcule la distance (rayon) nécessaire pour couvrir la diagonale de la BBox + une marge (padding) de ~5%.
 - [ ] **Application** : Passe ces valeurs calculées à `maptoposter` via les arguments `--latitude`, `--longitude` et `--distance`.
 
 ### 2. Gestion Multi-Formats
@@ -58,3 +58,10 @@ Afin d'obtenir des fichiers prêts à l'emploi pour Instagram, le Print et les W
 - [ ] Les images ne sont pas coupées (la ville entière est visible).
 - [ ] Les fichiers sont rangés dans `output/Pays/Departement/Ville/Format/`.
 - [ ] Le calcul de la distance est loggué dans la console pour vérification.
+
+## Dev Agent Record
+
+### File List
+- `worker/main.py`: Orchestrator for map generation, handles multi-format and directory structure.
+- `worker/calculate_bounds.py`: Calculates smart bounds (center + radius) using OSMnx and Haversine.
+- `worker/custom_overrides/create_map_poster.py`: Modified maptoposter script to support custom arguments and cropping.

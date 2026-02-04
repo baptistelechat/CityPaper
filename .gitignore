@@ -45,9 +45,10 @@ next-env.d.ts
 
 # worker
 worker/maptoposter/
-worker/__pycache__/
+__pycache__/
 worker/*.venv/
 .gitignore
 
 # generated content
 cache/
+.grepai/
