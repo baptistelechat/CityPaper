@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Nantes",
+    "country": "France",
+    "state": "Pays de la Loire",
+    "county": "Loire-Atlantique",
+    "postcode": "44000"
+  },
+  {
+    "name": "Paris",
+    "country": "France",
+    "state": "Île-de-France",
+    "county": "Paris",
+    "postcode": "75000"
+  },
+  {
+    "name": "Lyon",
+    "country": "France",
+    "state": "Auvergne-Rhône-Alpes",
+    "county": "Rhône",
+    "postcode": "69000"
+  },
+  {
+    "name": "Marseille",
+    "country": "France",
+    "state": "Provence-Alpes-Côte d'Azur",
+    "county": "Bouches-du-Rhône",
+    "postcode": "13000"
+  },
+  {
+    "name": "Bordeaux",
+    "country": "France",
+    "state": "Nouvelle-Aquitaine",
+    "county": "Gironde",
+    "postcode": "33000"
+  },
+  {
+    "name": "Lille",
+    "country": "France",
+    "state": "Hauts-de-France",
+    "county": "Nord",
+    "postcode": "59000"
+  },
+  {
+    "name": "Strasbourg",
+    "country": "France",
+    "state": "Grand Est",
+    "county": "Bas-Rhin",
+    "postcode": "67000"
+  },
+  {
+    "name": "Nice",
+    "country": "France",
+    "state": "Provence-Alpes-Côte d'Azur",
+    "county": "Alpes-Maritimes",
+    "postcode": "06000"
+  },
+  {
+    "name": "Toulouse",
+    "country": "France",
+    "state": "Occitanie",
+    "county": "Haute-Garonne",
+    "postcode": "31000"
+  }
+]

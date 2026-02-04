@@ -295,6 +295,7 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
 
     print(f"🏁 Completed {city}. Generated {success_count}/{total_ops} maps.")
 
+    uploaded_urls = {}
     # HF Upload
     if success_count > 0:
         print("☁️  Starting upload to Hugging Face...")
@@ -357,4 +358,4 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
             except Exception as e:
                 print(f"⚠️  Failed to purge local cache: {e}")
 
-    return success_count > 0
+    return success_count > 0, uploaded_urls, admin_info
