@@ -15,14 +15,14 @@ Afin d'obtenir des fichiers prêts à l'emploi pour Instagram, le Print et les W
 
 ### 1. Calcul Intelligent du Rayon (Distance)
 
-- [ ] **Récupération BBox** : Le script récupère la Bounding Box administrative (via `osmnx` ou Overpass) pour obtenir `(north, south, east, west)`.
-- [ ] **Calcul Centre** : Détermine le centre géographique : `lat = (north + south) / 2`, `lon = (east + west) / 2`.
-- [ ] **Calcul Distance** : Calcule la distance (rayon) nécessaire pour couvrir la diagonale de la BBox + une marge (padding) de ~5%.
-- [ ] **Application** : Passe ces valeurs calculées à `maptoposter` via les arguments `--latitude`, `--longitude` et `--distance`.
+- [x] **Récupération BBox** : Le script récupère la Bounding Box administrative (via `osmnx` ou Overpass) pour obtenir `(north, south, east, west)`.
+- [x] **Calcul Centre** : Détermine le centre géographique : `lat = (north + south) / 2`, `lon = (east + west) / 2`.
+- [x] **Calcul Distance** : Calcule la distance (rayon) nécessaire pour couvrir la diagonale de la BBox + une marge (padding) de ~5%.
+- [x] **Application** : Passe ces valeurs calculées à `maptoposter` via les arguments `--latitude`, `--longitude` et `--distance`.
 
 ### 2. Gestion Multi-Formats
 
-- [ ] Le script doit générer les cartes pour les formats suivants (configurables) en utilisant les paramètres `-W` (Largeur) et `-H` (Hauteur) :
+- [x] Le script doit générer les cartes pour les formats suivants (configurables) en utilisant les paramètres `-W` (Largeur) et `-H` (Hauteur) :
   - **Instagram Post** : 1080x1080px (`-W 3.6 -H 3.6`)
   - **Mobile Wallpaper** : 1080x1920px (`-W 3.6 -H 6.4`)
   - **HD Wallpaper** : 1920x1080px (`-W 6.4 -H 3.6`)
@@ -31,10 +31,10 @@ Afin d'obtenir des fichiers prêts à l'emploi pour Instagram, le Print et les W
 
 ### 3. Organisation des Sorties
 
-- [ ] Les fichiers générés doivent être triés dans une arborescence stricte :
+- [x] Les fichiers générés doivent être triés dans une arborescence stricte :
       `output/{Pays}/{Region}/{Departement}/{Ville}/{Format}/`
   - _Exemple :_ `output/France/Auvergne-Rhone-Alpes/Rhone/Lyon/Mobile_Wallpaper/lyon-mobile.png`
-- [ ] Le script doit tenter de récupérer la "Region" et le "Département" selon le pays via les métadonnées OSM (Admin Level 6 pour France, Level 4 pour autres souvent). Si introuvable, utiliser une velur fallback logique.
+- [x] Le script doit tenter de récupérer la "Region" et le "Département" selon le pays via les métadonnées OSM (Admin Level 6 pour France, Level 4 pour autres souvent). Si introuvable, utiliser une velur fallback logique.
 
 ## Technical Notes
 
@@ -54,14 +54,15 @@ Afin d'obtenir des fichiers prêts à l'emploi pour Instagram, le Print et les W
 
 ## Definition of Done
 
-- [ ] Le script prend une ville en entrée et génère TOUS les formats demandés.
-- [ ] Les images ne sont pas coupées (la ville entière est visible).
-- [ ] Les fichiers sont rangés dans `output/Pays/Departement/Ville/Format/`.
-- [ ] Le calcul de la distance est loggué dans la console pour vérification.
+- [x] Le script prend une ville en entrée et génère TOUS les formats demandés.
+- [x] Les images ne sont pas coupées (la ville entière est visible).
+- [x] Les fichiers sont rangés dans `output/Pays/Departement/Ville/Format/`.
+- [x] Le calcul de la distance est loggué dans la console pour vérification.
 
 ## Dev Agent Record
 
 ### File List
+
 - `worker/main.py`: Orchestrator for map generation, handles multi-format and directory structure.
 - `worker/calculate_bounds.py`: Calculates smart bounds (center + radius) using OSMnx and Haversine.
 - `worker/custom_overrides/create_map_poster.py`: Modified maptoposter script to support custom arguments and cropping.

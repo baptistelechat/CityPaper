@@ -13,11 +13,11 @@ Afin d'obtenir automatiquement des visuels variés et esthétiques pour n'import
 
 ## Acceptance Criteria
 
-- [ ] **Environnement Python** : Le script tourne sous Python 3.11+ et intègre la librairie/outil `maptoposter`.
-- [ ] **Input** : Le script accepte un nom de ville et de pays (ex: `python generate.py --city "Lyon" --country "France"`).
-- [ ] **Style (Thèmes)** : Le script doit être capable de générer **tous les styles** disponibles dans `maptoposter` (ex: `noir`, `minimal`, `terracotta`, `blueprint`, etc.) ou un style spécifique passé en paramètre.
-- [ ] **Output** : Le script doit conserver **tous les fichiers générés** par `maptoposter` (PNG, PDF, SVG si dispo).
-- [ ] **Richesse Visuelle** : Ne pas se limiter au Noir & Blanc, exploiter la diversité des thèmes de la librairie.
+- [x] **Environnement Python** : Le script tourne sous Python 3.11+ et intègre la librairie/outil `maptoposter`.
+- [x] **Input** : Le script accepte un nom de ville et de pays (ex: `python generate.py --city "Lyon" --country "France"`).
+- [x] **Style (Thèmes)** : Le script doit être capable de générer **tous les styles** disponibles dans `maptoposter` (ex: `noir`, `minimal`, `terracotta`, `blueprint`, etc.) ou un style spécifique passé en paramètre.
+- [x] **Output** : Le script doit conserver **tous les fichiers générés** par `maptoposter` (PNG, PDF, SVG si dispo).
+- [x] **Richesse Visuelle** : Ne pas se limiter au Noir & Blanc, exploiter la diversité des thèmes de la librairie.
 
 ## Technical Notes
 
@@ -34,6 +34,6 @@ Afin d'obtenir automatiquement des visuels variés et esthétiques pour n'import
 
 ## Definition of Done
 
-- [ ] L'outil `maptoposter` est fonctionnel dans `/worker`.
-- [ ] Un script wrapper (ou l'utilisation directe) permet de lancer la génération.
-- [ ] Test manuel : Générer "Paris" avec plusieurs thèmes et vérifier la présence des fichiers de sortie.
+- [x] L'outil `maptoposter` est fonctionnel dans `/worker`.
+- [x] Un script wrapper (ou l'utilisation directe) permet de lancer la génération.
+- [x] Test manuel : Générer "Paris" avec plusieurs thèmes et vérifier la présence des fichiers de sortie.
