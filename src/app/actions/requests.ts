@@ -13,13 +13,12 @@ export async function submitCityRequest(
     return { error: "Données invalides" };
   }
 
-  const { city, country, email, county, state, postcode } = result.data;
+  const { city, country, county, state, postcode } = result.data;
 
   try {
     const { error } = await supabase.from("requests").insert({
       city,
       country,
-      email: email || null,
       county: county || null,
       state: state || null,
       postcode,

@@ -15,7 +15,7 @@ Afin de boucler la boucle d'interaction et que les utilisateurs reçoivent leurs
 1.  **Mécanisme de Polling** : Le worker sonde la table `requests` de Supabase pour les entrées avec `status: 'pending'`.
 2.  **Traitement FIFO** : Il traite les demandes dans l'ordre Premier-Entré-Premier-Sorti (le plus ancien `created_at` en premier).
 3.  **Déclenchement de la Génération** : Pour chaque demande en attente, il déclenche le processus de génération de carte (utilisant la logique de l'Épic 2).
-4.  **Notification par Email** : Si un `email` est présent dans la demande, il envoie une notification via l'API Resend contenant le lien vers la page de la ville générée.
+4.  **~~Notification par Email~~** : (Annulé) La fonctionnalité d'email a été retirée (décision produit).
 5.  **Mises à jour de Statut** d'abord `updated_at` puis :
     - Met à jour le statut à `processing` au démarrage.
     - Met à jour le statut à `completed` une fois terminé avec succès.

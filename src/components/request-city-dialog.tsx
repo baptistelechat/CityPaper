@@ -14,7 +14,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -95,7 +94,6 @@ export function RequestCityDialog({ trigger }: { trigger?: React.ReactNode }) {
     defaultValues: {
       city: "",
       country: "",
-      email: "",
       postcode: "",
       county: "",
       state: "",
@@ -133,7 +131,7 @@ export function RequestCityDialog({ trigger }: { trigger?: React.ReactNode }) {
         toast.error(result.error);
       } else {
         toast.success(
-          "Demande envoyée ! Vous serez notifié si vous avez fourni un email.",
+          "Demande envoyée ! Revenez bientôt pour voir le résultat.",
         );
         setOpen(false);
         form.reset();
@@ -275,24 +273,6 @@ export function RequestCityDialog({ trigger }: { trigger?: React.ReactNode }) {
                     )}
                   />
                 </div>
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email (Optionnel)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Pour être notifié" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Utilisé <strong>uniquement</strong> pour vous prévenir
-                        lorsque la carte est prête.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
                 <DialogFooter>
                   <Button

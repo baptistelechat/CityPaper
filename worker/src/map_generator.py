@@ -21,7 +21,7 @@ def calculate_bounds(city: str, country: str, python_exe: str, worker_dir: Path)
         # Run the calculation script using the venv python
         result = subprocess.run(
             [python_exe, str(calc_script), "--city", city, "--country", country],
-            capture_output=True, text=True, check=True
+            capture_output=True, text=True, check=True, encoding='utf-8', errors='replace'
         )
         # Parse the JSON output (stdout)
         bounds_data = json.loads(result.stdout.strip())
@@ -117,7 +117,7 @@ def determine_output_path(worker_dir: Path, city: str, country: str, admin_info:
     print(f"📂 Base Output directory: {base_output_path}")
     return base_output_path
 
-def run_generation_for_city(city: str, country: str, python_exe: str, maptoposter_dir: Path, worker_dir: Path, theme: str = None, all_themes: bool = True, display_city_override: str = None, display_country_override: str = None):
+def run_generation_for_city(city: str, country: str, python_exe: str, maptoposter_dir: Path, worker_dir: Path, theme: str = None, all_themes: bool = True, display_city_override: str = None, display_country_override: str = None, postcode_override: str = None):
     """
     Runs the generation for a single city (iterating formats and themes) and moves the output.
     """
@@ -128,6 +128,16 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
         return False
     
     lat, lon, dist, admin_info = bounds_result
+
+    # Merge explicit postcode if missing in admin_info
+    if postcode_override:
+        if 'structured' not in admin_info:
+            admin_info['structured'] = {}
+        
+        current_postcode = admin_info['structured'].get('postcode')
+        if not current_postcode:
+            print(f"🧩 Injecting override postcode: {postcode_override}")
+            admin_info['structured']['postcode'] = postcode_override
 
     # Determine Display City Name
     display_city = city # Default to input
@@ -147,6 +157,24 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
     if display_country_override:
         display_country = display_country_override
         print(f"🏷️  Using Manual Display Country Name: {display_country}")
+
+    # Construct precise city param for map generation script
+    # This ensures the script has the full context if needed
+    structured = admin_info.get('structured', {})
+    city_param = city # Default
+    if structured:
+        # Construct something like "City Postcode County State Country"
+        parts = [
+            structured.get('city') or city,
+            structured.get('postcode'),
+            structured.get('county'),
+            structured.get('state'),
+            structured.get('region'),
+            structured.get('country') or country
+        ]
+        # Filter None and join
+        city_param = " ".join([p for p in parts if p])
+        print(f"🎯 Using precise city param: '{city_param}'")
 
     # 2. Determine Folder Structure
     base_output_path = determine_output_path(worker_dir, city, country, admin_info)
@@ -201,7 +229,7 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
                  "--distance", str(int(dist * 2000)), # Convert KM radius to Meters * 2 (Diameter)
                  "--width", str(width),
                  "--height", str(height),
-                 "--city", city, 
+                 "--city", city_param, 
                  "--country", country,
                  "--display-city", display_city,
                  "--display-country", display_country,
@@ -235,7 +263,7 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
                     else:
                         print(f"   ... Generating {fmt_name} with theme {theme_label} ...")
                         
-                    subprocess.run(cmd, cwd=maptoposter_dir, check=True, env=env, text=True, encoding='utf-8')
+                    subprocess.run(cmd, cwd=maptoposter_dir, check=True, env=env, text=True, encoding='utf-8', errors='replace')
                     
                     # Move files
                     # Wait for FS
@@ -332,9 +360,9 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
         uploaded_urls = hf.upload_directory(base_output_path, hf_prefix, commit_message=commit_msg)
         
         if uploaded_urls:
-            print("🚀 HF Upload Summary:")
-            for path, url in uploaded_urls.items():
-                print(f"   - {path}: {url}")
+            # print("🚀 HF Upload Summary:")
+            # for path, url in uploaded_urls.items():
+            #     print(f"   - {path}: {url}")
             
             # Auto-purge logic
             try:
