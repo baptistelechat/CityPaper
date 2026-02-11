@@ -4,7 +4,7 @@ import os
 import shutil
 import time
 from pathlib import Path
-from .config import FORMATS
+from .config import FORMATS, SELECTED_THEMES
 from .setup_env import get_available_themes
 from .storage import HuggingFaceClient
 
@@ -189,11 +189,29 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
              return False
         themes_to_run = [theme]
     elif all_themes:
-        themes_to_run = available_themes
+        # Check if we have a curated list in config
+        try:
+            if SELECTED_THEMES:
+                # Filter available themes to only include those in SELECTED_THEMES
+                themes_to_run = [t for t in SELECTED_THEMES if t in available_themes]
+                print(f"✨ Using optimized theme selection ({len(themes_to_run)} themes)")
+            else:
+                themes_to_run = available_themes
+        except NameError:
+             themes_to_run = available_themes
     else:
-         # Default to all themes if no specific theme is requested
-         print("ℹ️  No specific theme selected. Generating all available themes...")
-         themes_to_run = available_themes
+         # Default to optimized list if no specific theme is requested
+         try:
+            if SELECTED_THEMES:
+                # Filter available themes to only include those in SELECTED_THEMES
+                themes_to_run = [t for t in SELECTED_THEMES if t in available_themes]
+                print(f"ℹ️  No specific theme selected. Using optimized selection ({len(themes_to_run)} themes)...")
+            else:
+                print("ℹ️  No specific theme selected. Generating all available themes...")
+                themes_to_run = available_themes
+         except NameError:
+             print("ℹ️  No specific theme selected. Generating all available themes...")
+             themes_to_run = available_themes
          
          if not themes_to_run:
              print("❌ No themes found in themes directory.")
