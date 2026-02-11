@@ -33,8 +33,8 @@ FORMATS = {
 
     # 3:4 Ratio -> 15x20" (Fits exactly)
     # Ratio: 1.33 - "Middle ground" between 2:3 (1.5) and 4:5 (1.25)
-    "Photo_15x20_Portrait": {"w": 15.0, "h": 20.0},  # 38.1 x 50.8 cm | Ratio 1.33
-    "Photo_20x15_Landscape": {"w": 20.0, "h": 15.0}, # 50.8 x 38.1 cm | Ratio 1.33
+    # "Photo_15x20_Portrait": {"w": 15.0, "h": 20.0},  # 38.1 x 50.8 cm | Ratio 1.33
+    # "Photo_20x15_Landscape": {"w": 20.0, "h": 15.0}, # 50.8 x 38.1 cm | Ratio 1.33
 
     # 4:5 Ratio -> 16x20" (Standard Frame)
     # Ratio: 1.25 - Boxier/Compact
