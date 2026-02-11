@@ -235,6 +235,19 @@ export function RequestCityDialog({ trigger }: { trigger?: React.ReactNode }) {
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
+                    name="county"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Département / Comté</FormLabel>
+                        <FormControl>
+                          <Input {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
                     name="state"
                     render={({ field }) => (
                       <FormItem>
@@ -246,6 +259,8 @@ export function RequestCityDialog({ trigger }: { trigger?: React.ReactNode }) {
                       </FormItem>
                     )}
                   />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="country"
