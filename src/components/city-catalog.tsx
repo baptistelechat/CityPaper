@@ -1,6 +1,7 @@
 "use client";
 
 import { CityCard } from "@/components/city-card";
+import { RequestCityDialog } from "@/components/request-city-dialog";
 import { Input } from "@/components/ui/input";
 import type { City } from "@/types/city";
 import { AnimatePresence, motion } from "framer-motion";
@@ -65,9 +66,10 @@ export function CityCatalog({ cities }: CityCatalogProps) {
             animate={{ opacity: 1 }}
             className="text-center py-12"
           >
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-muted-foreground mb-6">
               Aucune ville trouvée
             </p>
+            <RequestCityDialog />
           </motion.div>
         )}
       </section>
