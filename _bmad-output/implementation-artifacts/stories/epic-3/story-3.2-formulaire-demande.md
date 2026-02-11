@@ -1,6 +1,6 @@
 # Story 3.2: Formulaire de Demande (Frontend)
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: La validation est optionnelle. Exécutez validate-create-story pour un contrôle qualité avant dev-story. -->
 
@@ -38,22 +38,22 @@ Afin qu'**elle soit ajoutée à la file d'attente de génération**.
 
 ## Tâches / Sous-tâches
 
-- [ ] **Tâche 1 : Configuration Schéma de Validation & Server Action** (CA: #3)
-  - [ ] Définir le schéma Zod pour le formulaire de demande (`city`, `country`, `email`, `view_preference`).
-  - [ ] Créer la Server Action `submitCityRequest` dans `app/actions/requests.ts` (ou similaire).
-  - [ ] Implémenter la logique d'insertion Supabase en utilisant le client Supabase.
-  - [ ] S'assurer que le JSONB `metadata` est correctement construit à partir des champs du formulaire.
+- [x] **Tâche 1 : Configuration Schéma de Validation & Server Action** (CA: #3)
+  - [x] Définir le schéma Zod pour le formulaire de demande (`city`, `country`, `email`, `view_preference`).
+  - [x] Créer la Server Action `submitCityRequest` dans `app/actions/requests.ts` (ou similaire).
+  - [x] Implémenter la logique d'insertion Supabase en utilisant le client Supabase.
+  - [x] S'assurer que le JSONB `metadata` est correctement construit à partir des champs du formulaire.
 
-- [ ] **Tâche 2 : Créer le Composant Formulaire de Demande** (CA: #2, #4)
-  - [ ] Créer `components/request-city-dialog.tsx` en utilisant shadcn/ui `Dialog`, `Form`, `Input`, `Select`/`RadioGroup`.
-  - [ ] Implémenter la logique du formulaire avec `react-hook-form` et le résolveur `zod`.
-  - [ ] Connecter la soumission du formulaire à la Server Action.
-  - [ ] Implémenter les notifications toast pour les états succès/erreur.
+- [x] **Tâche 2 : Créer le Composant Formulaire de Demande** (CA: #2, #4)
+  - [x] Créer `components/request-city-dialog.tsx` en utilisant shadcn/ui `Dialog`, `Form`, `Input`, `Select`/`RadioGroup`.
+  - [x] Implémenter la logique du formulaire avec `react-hook-form` et le résolveur `zod`.
+  - [x] Connecter la soumission du formulaire à la Server Action.
+  - [x] Implémenter les notifications toast pour les états succès/erreur.
 
-- [ ] **Tâche 3 : Intégrer dans l'UI** (CA: #1)
-  - [ ] Localiser l'état "Aucun résultat" dans le composant Grille de Ville/Recherche.
-  - [ ] Ajouter le bouton CTA "Demander cette ville" ou similaire.
-  - [ ] Connecter le bouton pour ouvrir le `RequestCityDialog`.
+- [x] **Tâche 3 : Intégrer dans l'UI** (CA: #1)
+  - [x] Localiser l'état "Aucun résultat" dans le composant Grille de Ville/Recherche.
+  - [x] Ajouter le bouton CTA "Demander cette ville" ou similaire.
+  - [x] Connecter le bouton pour ouvrir le `RequestCityDialog`.
 
 ## Notes de Développement
 
