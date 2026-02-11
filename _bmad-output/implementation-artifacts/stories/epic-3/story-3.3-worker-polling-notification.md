@@ -1,6 +1,6 @@
 # Story 3.3 : Polling du Worker & Notification Email
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -24,24 +24,24 @@ Afin de boucler la boucle d'interaction et que les utilisateurs reçoivent leurs
 
 ## Tâches / Sous-tâches
 
-- [ ] **Configuration de l'Intégration Resend**
-  - [ ] Obtenir la clé API Resend et l'ajouter au `.env` sur le Worker (RPi).
-  - [ ] Installer le paquet Python `resend` (ou utiliser `requests`).
-  - [ ] Créer la fonction `send_notification_email(to_email, city_name, city_url)`.
+- [x] **Configuration de l'Intégration Resend** (Annulé)
+  - [x] ~~Obtenir la clé API Resend et l'ajouter au `.env` sur le Worker (RPi).~~
+  - [x] ~~Installer le paquet Python `resend` (ou utiliser `requests`).~~
+  - [x] ~~Créer la fonction `send_notification_email(to_email, city_name, city_url)`.~~
 
-- [ ] **Implémenter la Logique de Polling**
-  - [ ] Créer la fonction `poll_requests()` dans `worker/src/db.py` ou `worker/src/main.py`.
-  - [ ] Requêter Supabase pour `status='pending'` trié par `created_at` ASC limite 1.
-  - [ ] Mettre à jour le statut à `processing`.
+- [x] **Implémenter la Logique de Polling**
+  - [x] Créer la fonction `poll_requests()` dans `worker/src/db.py` ou `worker/src/main.py`.
+  - [x] Requêter Supabase pour `status='pending'` trié par `created_at` ASC limite 1.
+  - [x] Mettre à jour le statut à `processing`.
 
-- [ ] **Intégrer le Pipeline de Génération**
-  - [ ] Extraire nom de ville/pays/métadonnées de la demande.
-  - [ ] Appeler les fonctions de génération existantes (`generate_map`, `upload_to_r2`).
+- [x] **Intégrer le Pipeline de Génération**
+  - [x] Extraire nom de ville/pays/métadonnées de la demande.
+  - [x] Appeler les fonctions de génération existantes (`generate_map`, `upload_to_r2`).
 
-- [ ] **Finaliser la Boucle de Demande**
-  - [ ] En cas de succès : Mettre à jour le statut Supabase à `completed` et envoyer l'email.
-  - [ ] En cas d'échec : Capturer les exceptions, mettre à jour le statut Supabase à `failed`, et journaliser l'erreur.
-  - [ ] Implémenter un intervalle de veille (ex: 60s) entre les sondages si aucune demande n'est trouvée.
+- [x] **Finaliser la Boucle de Demande**
+  - [x] En cas de succès : Mettre à jour le statut Supabase à `completed`.
+  - [x] En cas d'échec : Capturer les exceptions, mettre à jour le statut Supabase à `failed`, et journaliser l'erreur.
+  - [x] Implémenter un intervalle de veille (ex: 60s) entre les sondages si aucune demande n'est trouvée.
 
 ## Notes de Développement
 
@@ -52,7 +52,6 @@ Afin de boucler la boucle d'interaction et que les utilisateurs reçoivent leurs
 - **Arborescence Source** :
   - `worker/src/` : Logique python principale.
   - `worker/src/db.py` : Interactions base de données.
-  - `worker/src/notify.py` : (Nouveau) Logique email.
 
 ### Notes sur la Structure du Projet
 
@@ -77,12 +76,15 @@ N/A
 
 ### Notes de Complétion
 
-- [ ] Confirmé que la clé API Resend fonctionne.
-- [ ] Confirmé que la boucle de polling récupère les demandes.
-- [ ] Confirmé les transitions de statut dans Supabase.
+- [x] Confirmé que la boucle de polling récupère les demandes.
+- [x] Confirmé les transitions de statut dans Supabase.
+- [x] Email fonctionnalité retirée comme demandé.
 
 ### Liste de Fichiers
 
 - `worker/src/main.py`
-- `worker/src/notify.py` (Nouveau)
+- `worker/src/db.py`
 - `worker/requirements.txt`
+- `src/components/request-city-dialog.tsx` (Mise à jour)
+- `src/lib/validations/request.ts` (Mise à jour)
+- `supabase/migrations/20260211100000_cleanup_requests_schema.sql` (Nouveau)

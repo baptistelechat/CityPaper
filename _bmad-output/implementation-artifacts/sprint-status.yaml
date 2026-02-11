@@ -51,5 +51,5 @@ development_status:
   epic-3: in-progress
   3-1-backend-supabase-requests: done
   3-2-formulaire-demande: done
-  3-3-worker-polling-notification: ready-for-dev
+  3-3-worker-polling-notification: done
   epic-3-retrospective: optional
