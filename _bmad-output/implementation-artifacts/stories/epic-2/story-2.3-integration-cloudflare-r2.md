@@ -2,7 +2,7 @@
 
 **ID:** STORY-2.3
 **Epic:** Epic 2: Usine de Cartes Automatisée
-**Status:** Ready for Dev
+**Status:** Done
 **Priority:** High
 **Story Points:** 3
 
@@ -14,10 +14,10 @@ Afin de les rendre accessibles publiquement pour le téléchargement.
 
 ## Acceptance Criteria
 
-- [ ] Étant donné des fichiers générés localement (PNG, PDF)
-- [ ] Quand la génération est terminée
-- [ ] Alors les fichiers sont envoyés sur le bucket R2
-- [ ] Et les URLs publiques sont retournées par le script
+- [x] Étant donné des fichiers générés localement (PNG, PDF)
+- [x] Quand la génération est terminée
+- [x] Alors les fichiers sont envoyés sur le bucket R2
+- [x] Et les URLs publiques sont retournées par le script
 
 ## Technical Notes
 
@@ -28,7 +28,7 @@ Afin de les rendre accessibles publiquement pour le téléchargement.
 
 ## Definition of Done
 
-- [ ] Code implémenté dans le script de génération
-- [ ] Upload fonctionnel vers R2
-- [ ] Gestion des erreurs (ex: credentials invalides, réseau)
-- [ ] Variables d'environnement configurées
+- [x] Code implémenté dans le script de génération
+- [x] Upload fonctionnel vers R2
+- [x] Gestion des erreurs (ex: credentials invalides, réseau)
+- [x] Variables d'environnement configurées

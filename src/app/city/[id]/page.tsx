@@ -1,4 +1,5 @@
 import { DownloadButton } from "@/components/download-button";
+import { RequestCityDialog } from "@/components/request-city-dialog";
 import { Button } from "@/components/ui/button";
 import cities from "@/data/cities.json";
 import { ArrowLeft, Heart } from "lucide-react";
@@ -66,9 +67,13 @@ export default async function CityPage({
             Retour à la galerie
           </Link>
         </Button>
-        <Button variant="outline" size="sm">
-          Demander
-        </Button>
+        <RequestCityDialog
+          trigger={
+            <Button>
+              Demander une ville
+            </Button>
+          }
+        />
       </header>
 
       <main className="flex-1 flex flex-col justify-center p-6 md:p-12">

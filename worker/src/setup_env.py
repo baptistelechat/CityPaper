@@ -85,8 +85,12 @@ def ensure_venv(worker_dir: Path) -> str:
 
     requirements_file = worker_dir / "requirements.txt"
 
-    # 1. Create venv if it doesn't exist
-    if not venv_dir.exists():
+    # 1. Create venv if it doesn't exist OR if python executable is missing
+    if not venv_dir.exists() or not python_exe.exists():
+        if venv_dir.exists():
+             print("♻️  Venv exists but is corrupted (python executable missing). Re-creating...")
+             shutil.rmtree(venv_dir)
+
         print(f"📦 Creating virtual environment at {venv_dir}...")
         try:
             subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)

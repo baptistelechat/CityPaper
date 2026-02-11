@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center">CityPaper 🌍📰</h1>
 
-## Getting Started
+<p align="center">
+  <b>Turn any city into a beautiful piece of art.</b><br>
+  <i>An interactive platform to request, generate, and view artistic city maps based on OpenStreetMap data.</i>
+</p>
 
-First, run the development server:
+<p align="center">
+  <a href="https://citypaper-v1.vercel.app">🔗 Visit Website</a>
+</p>
+
+---
+
+## 📸 Screenshots
+
+> _Add screenshots here_
+
+## 🚀 Key Features
+
+### 🗺️ Map Generation
+
+- **Automated Pipeline**: Converts OSM data into high-resolution artistic maps using [maptoposter](https://github.com/originalankur/maptoposter).
+- **Asynchronous Processing**: Python worker handles heavy rendering tasks in the background.
+- **Global Coverage**: Request any city, village, or town worldwide.
+
+### ⚡ Modern Architecture
+
+- **Queue System**: Supabase-powered request queue for scalable processing.
+- **Smart Storage**: Uses **Hugging Face Datasets** for unlimited, free storage of generated assets.
+- **Live Updates**: Real-time status tracking from "Pending" to "Published".
+
+## 💻 Technical Stack
+
+| Category       | Technologies                                                                                                                                                             |
+| :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend**   | ![Next.js](https://img.shields.io/badge/Next.js-16-black) ![React](https://img.shields.io/badge/React-19-blue) ![Tailwind](https://img.shields.io/badge/Tailwind-4-cyan) |
+| **Backend**    | ![Supabase](https://img.shields.io/badge/Supabase-Database-green) ![Python](https://img.shields.io/badge/Python-3.11+-yellow)                                            |
+| **Worker**     | `matplotlib`, `osmnx`, `pandas`, `gitpython`                                                                                                                             |
+| **Storage**    | **Hugging Face Datasets** (Asset Storage)                                                                                                                                |
+| **Deployment** | **Vercel** (Frontend) + **Raspberry Pi** (Worker)                                                                                                                        |
+
+---
+
+## 📦 Installation & Getting Started
+
+### Frontend Development
+
+Make sure you have **Node.js** and **PNPM** installed.
+
+1. **Clone the project**
+
+    ```bash
+    # 1. Clone the repository
+    git clone https://github.com/baptistelechat/CityPaper.git
+    cd CityPaper
+
+    # 2. Setup Environment Variables
+    # Create .env.local and fill in SUPABASE_URL, SUPABASE_KEY, HF_TOKEN, etc.
+    cp .env.example .env.local
+    nano .env.local
+    ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Start the development server**
+
+   ```bash
+   pnpm dev
+   ```
+
+4. **Build for production**
+   ```bash
+   pnpm build
+   ```
+
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
+
+## 🛠️ Worker Setup (Raspberry Pi 5)
+
+The worker is a Python script that polls Supabase for map generation requests, generates the maps, and pushes the results to GitHub/Hugging Face.
+
+### Prerequisites
+
+1.  **Git** installed.
+2.  **Python 3.11+** installed.
+3.  **PM2** installed globally (`npm install -g pm2`).
+4.  A configured `.env.local` file in the root directory (see `.env.example`).
+
+### 📦 Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. Clone the repository
+git clone https://github.com/baptistelechat/CityPaper.git
+cd CityPaper
+
+# 2. Setup Environment Variables
+# Create .env.local and fill in SUPABASE_URL, SUPABASE_KEY, HF_TOKEN, etc.
+cp .env.example .env.local
+nano .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### ⚙️ Running with PM2
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To ensure the worker runs continuously and restarts automatically on crash or reboot, use PM2.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Start the worker with PM2
+# --worker: Enables polling loop
+# --push: Enables git push after generation
+pm2 start worker/main.py --name "citypaper-worker" --interpreter python3 -- --worker --push
 
-## Learn More
+# Save the PM2 list to resurrect on reboot
+pm2 save
 
-To learn more about Next.js, take a look at the following resources:
+# Setup PM2 startup script (follow instructions printed by this command)
+pm2 startup
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🔍 Monitoring
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Check status
+pm2 status citypaper-worker
 
-## Deploy on Vercel
+# View logs
+pm2 logs citypaper-worker
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Stop the worker
+pm2 stop citypaper-worker
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Restart
+pm2 restart citypaper-worker
+```
+
+---
+
+## 🛡️ Best Practices
+
+This project follows defined code standards:
+
+- **Linting**: `pnpm lint` to check code quality.
+- **Architecture**: Clear separation between UI, Logic (Hooks/Store), and Data.
+- **Clean Code**: Explicit variables, short functions, and strict typing.
+
+---
+
+
+## 😸 Maintainers
+
+Made with ❤️ by [Baptiste LECHAT](https://github.com/baptistelechat)
+
+## 📝 License
+
+This project is MIT licensed.
