@@ -495,7 +495,7 @@ export function RequestCityDialog({ trigger }: { trigger?: React.ReactNode }) {
 
           <TabsContent
             value="bulk"
-            className="flex-1 flex flex-col gap-4 overflow-hidden py-4"
+            className="flex-1 flex flex-col gap-4 overflow-hidden py-4 px-1"
           >
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">
