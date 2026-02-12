@@ -148,9 +148,14 @@ def run_worker_loop(python_exe: str, maptoposter_dir: Path, worker_dir: Path, ar
                 postcode = request.get('postcode')
                 
                 # Construct search query with postcode if available
-                search_city = city_name
+                # Use "City Postcode, Country" format for better accuracy
+                search_parts = [city_name]
                 if postcode:
-                    search_city = f"{city_name} {postcode}"
+                    search_parts.append(postcode)
+                
+                search_city = " ".join(search_parts)
+                if country_name:
+                    search_city = f"{search_city}, {country_name}"
                 
                 print(f"👉 Processing request: {city_name} ({req_id}) [Search: {search_city}]")
                 

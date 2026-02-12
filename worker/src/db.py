@@ -171,10 +171,12 @@ def update_request_status(request_id, status, metadata=None):
             .execute()
         
         print(f"📡 Updated request {request_id} status to {status}")
+        return True
     except Exception as e:
         print(f"❌ Error updating request status: {e}")
+        return False
 
-def reset_stale_requests(timeout_minutes=30):
+def reset_stale_requests(minutes=30):
     """
     Reset 'processing' requests to 'pending' if they are stuck for too long.
     """
