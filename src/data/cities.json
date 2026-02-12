@@ -1,0 +1,19 @@
+[
+  {
+    "id": "france-pays-de-la-loire-nantes",
+    "name": "Nantes",
+    "country": "France",
+    "coordinates": "47.2382, -1.5603",
+    "admin_info": {
+      "structured": {
+        "country": "France",
+        "state": "Pays de la Loire",
+        "county": "Loire-Atlantique",
+        "postcode": null,
+        "city": "Nantes"
+      }
+    },
+    "last_updated": "2026-02-12T15:26:58.269589Z",
+    "status": "published"
+  }
+]
