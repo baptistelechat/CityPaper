@@ -10,11 +10,23 @@ load_dotenv(dotenv_path=env_path)
 # Selected themes to generate (Optimization for RPi5)
 # Comment out to generate ALL themes
 SELECTED_THEMES = [
-    "noir",          # Classic Black & White
-    "warm_beige",    # Minimalist Light
-    "terracotta",    # Warm/Earth tones
-    "blueprint",     # Technical/Architectural
-    "midnight_blue", # Dark Blue/Elegant
+    # "autumn",
+    "blueprint",
+    # "contrast_zones",
+    # "copper_patina",
+    # "emerald",
+    "forest",
+    # "gradient_roads",
+    "japanese_ink",
+    "midnight_blue",
+    # "monochrome_blue",
+    # "neon_cyberpunk",
+    "noir",
+    "ocean",
+    "pastel_dream",
+    # "sunset",
+    "terracotta",
+    "warm_beige",
 ]
 
 FORMATS = {
@@ -53,7 +65,7 @@ FORMATS = {
 
     # Social / Square (Standard 20x20")
     # Ratio: 1.00
-    # "Square_20x20": {"w": 20.0, "h": 20.0}, # 50.8 x 50.8 cm | Ratio 1.00
+    "Square_20x20": {"w": 20.0, "h": 20.0}, # 50.8 x 50.8 cm | Ratio 1.00
 }
 
 MAPTOPOSTER_REPO = "https://github.com/originalankur/maptoposter.git"
