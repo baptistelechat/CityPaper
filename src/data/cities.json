@@ -9,11 +9,11 @@
         "country": "France",
         "state": "Pays de la Loire",
         "county": "Loire-Atlantique",
-        "postcode": null,
+        "postcode": "44000",
         "city": "Nantes"
       }
     },
-    "last_updated": "2026-02-12T15:26:58.269589Z",
+    "last_updated": "2026-02-12T16:02:25.707128Z",
     "status": "published"
   }
 ]

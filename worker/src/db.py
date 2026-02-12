@@ -73,13 +73,17 @@ def update_city_entry(city_name, country_name, admin_info, uploaded_urls=None, r
     structured = clean_admin_info.get("structured", {})
     slug_parts = []
     
-    # Preferred slug structure: Country-State-City or Country-City if state missing
+    # Preferred slug structure: Country-State-County-Postcode-City
     s_country = structured.get("country") or country_name
     s_state = structured.get("state")
+    s_county = structured.get("county")
+    s_postcode = structured.get("postcode")
     s_city = structured.get("city") or city_name
     
     if s_country: slug_parts.append(clean_name(s_country).lower().replace(" ", "-"))
     if s_state: slug_parts.append(clean_name(s_state).lower().replace(" ", "-"))
+    if s_county: slug_parts.append(clean_name(s_county).lower().replace(" ", "-"))
+    if s_postcode: slug_parts.append(clean_name(s_postcode).lower().replace(" ", "-"))
     if s_city: slug_parts.append(clean_name(s_city).lower().replace(" ", "-"))
     
     slug = "-".join([p for p in slug_parts if p])
@@ -108,6 +112,8 @@ def update_city_entry(city_name, country_name, admin_info, uploaded_urls=None, r
         print(f"➕ Added new entry for {city_name}, {country_name} (ID: {entry_id})")
     
     save_db(db)
+    
+    return new_entry
 
 # Supabase Helper Functions
 

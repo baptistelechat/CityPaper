@@ -2,6 +2,8 @@ import { DownloadButton } from "@/components/download-button";
 import { RequestCityDialog } from "@/components/request-city-dialog";
 import { Button } from "@/components/ui/button";
 import cities from "@/data/cities.json";
+import { getCityImageUrl } from "@/lib/city-utils";
+import { SELECTED_THEMES } from "@/lib/constants/config";
 import { ArrowLeft, Heart } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -42,6 +44,8 @@ export default async function CityPage({
   const { id } = await params;
   const city = cities.find((c) => c.id === id);
 
+  const imageUrl = city ? getCityImageUrl(city, SELECTED_THEMES[0]) : "";
+
   if (!city) {
     notFound();
   }
@@ -52,7 +56,11 @@ export default async function CityPage({
     cities[(currentIndex + 1) % cities.length],
     cities[(currentIndex + 2) % cities.length],
     cities[(currentIndex + 3) % cities.length],
-  ];
+  ].filter(
+    (c, index, self) =>
+      // Filter out undefined and duplicates
+      c && self.findIndex((t) => t.id === c.id) === index && c.id !== id,
+  );
 
   return (
     <>
@@ -67,13 +75,7 @@ export default async function CityPage({
             Retour à la galerie
           </Link>
         </Button>
-        <RequestCityDialog
-          trigger={
-            <Button>
-              Demander une ville
-            </Button>
-          }
-        />
+        <RequestCityDialog trigger={<Button>Demander une ville</Button>} />
       </header>
 
       <main className="flex-1 flex flex-col justify-center p-6 md:p-12">
@@ -82,7 +84,7 @@ export default async function CityPage({
             {/* Image Section */}
             <div className="relative aspect-5/7 w-full overflow-hidden bg-muted shadow-2xl">
               <Image
-                src={city.image}
+                src={imageUrl}
                 alt={`${city.name} - CityPaper`}
                 fill
                 priority
@@ -112,12 +114,12 @@ export default async function CityPage({
                   </h3>
                   <div className="flex flex-col gap-4">
                     <DownloadButton
-                      url={city.image}
+                      url={imageUrl}
                       filename={`${city.name.toLowerCase()}-poster.jpg`}
                       label="Télécharger PDF (Print)"
                     />
                     <DownloadButton
-                      url={city.image}
+                      url={imageUrl}
                       filename={`${city.name.toLowerCase()}-wallpaper.jpg`}
                       label="Télécharger Wallpaper"
                       variant="outline"

@@ -185,14 +185,17 @@ def run_worker_loop(python_exe: str, maptoposter_dir: Path, worker_dir: Path, ar
                     print("✅ Generation successful!")
                     
                     # Update local DB (Git)
-                    update_city_entry(city_name, country_name, admin_info, uploaded_urls, request_id=req_id)
+                    entry = update_city_entry(city_name, country_name, admin_info, uploaded_urls, request_id=req_id)
                     
                     # Calculate City Page URL
-                    # Use the slug generated in DB if possible, but here we just need a link for Supabase
-                    # Ideally we should get the slug back from update_city_entry, but let's recompute or trust the logic
-                    slug_city = clean_name(city_name).lower().replace(" ", "-").replace("_", "-")
-                    slug_country = clean_name(country_name).lower().replace(" ", "-").replace("_", "-")
-                    slug = f"{slug_city}-{slug_country}" # This might drift from DB logic, but it's just for metadata
+                    # Use the slug generated in DB
+                    slug = entry.get("id")
+                    
+                    # Fallback if slug is missing (should not happen)
+                    if not slug:
+                         slug_city = clean_name(city_name).lower().replace(" ", "-").replace("_", "-")
+                         slug_country = clean_name(country_name).lower().replace(" ", "-").replace("_", "-")
+                         slug = f"{slug_city}-{slug_country}"
 
                     
                     base_url = "https://citypaper-v1.vercel.app" 

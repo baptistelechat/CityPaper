@@ -1,3 +1,5 @@
+import { getCityImageUrl } from "@/lib/city-utils";
+import { SELECTED_THEMES } from "@/lib/constants/config";
 import { cn } from "@/lib/utils";
 import { City } from "@/types/city";
 import Image from "next/image";
@@ -9,6 +11,8 @@ interface CityCardProps {
 }
 
 export function CityCard({ city, className }: CityCardProps) {
+  const imageUrl = city ? getCityImageUrl(city, SELECTED_THEMES[0]) : "";
+
   return (
     <Link
       href={`/city/${city.id}`}
@@ -18,7 +22,7 @@ export function CityCard({ city, className }: CityCardProps) {
       )}
     >
       <Image
-        src={city.image}
+        src={imageUrl}
         alt={city.name}
         fill
         className="object-cover transition-transform duration-500 group-hover:scale-105"
