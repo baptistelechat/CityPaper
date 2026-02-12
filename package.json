@@ -6,7 +6,8 @@
     "dev": "concurrently -n \"NEXT,GREP\" -c \"cyan.dim,magenta.dim\" \"next dev --turbo -p 3001\" \"grepai watch\"",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
