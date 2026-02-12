@@ -97,7 +97,7 @@ def process_batch(json_path: Path, worker_dir: Path, python_exe: str, maptoposte
             
             if success and uploaded_urls:
                 # Use the original simple name for the database entry
-                update_city_entry(city_name, country_name, admin_info)
+                update_city_entry(city_name, country_name, admin_info, uploaded_urls)
                 
                 # Build detailed location string for commit message
                 commit_msg = format_detailed_commit_msg(city_name, country_name, admin_info)
@@ -162,12 +162,16 @@ def run_worker_loop(python_exe: str, maptoposter_dir: Path, worker_dir: Path, ar
                 # 3. Generate Map
                 print(f"🎨 Generating map for {search_city}, {country_name}...")
                 
+                # Lazy import inside worker loop
+                from src.map_generator import run_generation_for_city, clean_name
+
                 # Force all themes for user requests unless specified otherwise
+                # Watch mode doesn't support specific theme override per request yet, so we pass None
                 success, uploaded_urls, admin_info = run_generation_for_city(
                     search_city, country_name, python_exe, maptoposter_dir, worker_dir, 
-                    theme=args.theme, all_themes=True,
+                    theme=None, all_themes=True,
                     display_city_override=city_name,
-                    display_country_override=args.display_country,
+                    display_country_override=None,
                     postcode_override=postcode
                 )
                 
@@ -176,12 +180,15 @@ def run_worker_loop(python_exe: str, maptoposter_dir: Path, worker_dir: Path, ar
                     print("✅ Generation successful!")
                     
                     # Update local DB (Git)
-                    update_city_entry(city_name, country_name, admin_info)
+                    update_city_entry(city_name, country_name, admin_info, uploaded_urls, request_id=req_id)
                     
                     # Calculate City Page URL
+                    # Use the slug generated in DB if possible, but here we just need a link for Supabase
+                    # Ideally we should get the slug back from update_city_entry, but let's recompute or trust the logic
                     slug_city = clean_name(city_name).lower().replace(" ", "-").replace("_", "-")
                     slug_country = clean_name(country_name).lower().replace(" ", "-").replace("_", "-")
-                    slug = f"{slug_city}-{slug_country}"
+                    slug = f"{slug_city}-{slug_country}" # This might drift from DB logic, but it's just for metadata
+
                     
                     base_url = "https://citypaper-v1.vercel.app" 
                     city_page_url = f"{base_url}/city/{slug}"
@@ -336,13 +343,13 @@ def main():
              from src.db import update_city_entry, get_db_path
              from src.git_ops import commit_and_push_changes
              
-             update_city_entry(args.city, args.country, uploaded_urls, admin_info)
+             update_city_entry(args.city, args.country, admin_info, uploaded_urls)
              
              # Build detailed location string for commit message
-             location_str = build_location_string(admin_info, args.city, args.country)
+             commit_msg = format_detailed_commit_msg(args.city, args.country, admin_info)
              
              db_path = get_db_path()
-             commit_and_push_changes(db_path, f"🌍 Update data for {location_str}", push=args.push)
+             commit_and_push_changes(db_path, commit_msg, push=args.push)
     
     else:
         parser.print_help()

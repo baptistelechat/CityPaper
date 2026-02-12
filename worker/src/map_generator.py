@@ -24,6 +24,8 @@ def calculate_bounds(city: str, country: str, python_exe: str, worker_dir: Path)
             capture_output=True, text=True, check=True, encoding='utf-8', errors='replace'
         )
         # Parse the JSON output (stdout)
+        if result.stderr:
+            print(f"⚠️ calculate_bounds stderr:\n{result.stderr}")
         bounds_data = json.loads(result.stdout.strip())
         
         lat = bounds_data['latitude']
@@ -128,6 +130,11 @@ def run_generation_for_city(city: str, country: str, python_exe: str, maptoposte
         return False
     
     lat, lon, dist, admin_info = bounds_result
+
+    # Inject lat/lon/dist into admin_info for downstream use (DB)
+    admin_info['latitude'] = lat
+    admin_info['longitude'] = lon
+    admin_info['distance'] = dist
 
     # Merge explicit postcode if missing in admin_info
     if postcode_override:

@@ -11,6 +11,7 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 import re
+import time
 
 def calculate_bounds(city, country):
     query = f"{city}, {country}"
@@ -57,13 +58,27 @@ def calculate_bounds(city, country):
         # Use Nominatim to get structured address details
         structured_admin = {}
         try:
-            geolocator = Nominatim(user_agent="city_paper_worker", timeout=10)
-            # Use the center point to reverse geocode or use the query again
-            # Using query again is safer to match the user's intent, but using coordinates is safer for the location
-            # Let's retry the query with addressdetails
-            location = geolocator.geocode(query, addressdetails=True)
+            # Use a unique user agent to avoid blocks
+            geolocator = Nominatim(user_agent="CityPaper_Worker_Dev_v1", timeout=10)
+            
+            # Retry logic for rate limits (509)
+            location = None
+            for attempt in range(3):
+                try:
+                    # Use the center point to reverse geocode or use the query again
+                    location = geolocator.geocode(query, addressdetails=True)
+                    if location:
+                        break
+                except Exception as retry_err:
+                    logger.warning(f"⚠️ Attempt {attempt+1}/3 failed: {retry_err}")
+                    if attempt < 2:
+                        sleep_time = 5 * (attempt + 1) # Increased wait time
+                        logger.info(f"⏳ Waiting {sleep_time}s before retrying...")
+                        time.sleep(sleep_time)
+
             if location and location.raw and 'address' in location.raw:
                 addr = location.raw['address']
+                logger.info(f"📋 Raw Address Details: {json.dumps(addr, ensure_ascii=False)}")
                 
                 # Try to find postcode in address, fallback to regex from input city string
                 postcode = addr.get('postcode')
@@ -76,15 +91,47 @@ def calculate_bounds(city, country):
 
                 structured_admin = {
                     "country": addr.get('country'),
-                    "region": addr.get('region'),
-                    "state": addr.get('state'),
+                    "state": addr.get('state') or addr.get('region'), # Map region to state if state is missing, otherwise prefer state
                     "county": addr.get('county'),
-                    "city": addr.get('city') or addr.get('town') or addr.get('village') or addr.get('municipality'),
-                    "postcode": postcode
+                    "postcode": postcode,
+                    "city": addr.get('city') or addr.get('town') or addr.get('village') or addr.get('municipality')
                 }
                 logger.info(f"📋 Structured Admin Info: {structured_admin}")
         except Exception as e:
             logger.warning(f"⚠️ Could not fetch structured address details: {e}")
+
+        # Fallback if structured is empty (e.g. rate limits)
+        if not structured_admin and parts:
+            logger.info("⚠️ Using fallback parsing from display_name parts")
+            # Heuristic: First part is City, Last is Country.
+            # Intermediate parts are tricky, but usually [City, County, Region, ..., Country]
+            
+            fallback_city = parts[0]
+            fallback_country = parts[-1]
+            fallback_county = parts[1] if len(parts) > 2 else None
+            fallback_state = parts[2] if len(parts) > 3 else None
+            
+            # Try to find postcode in parts
+            fallback_postcode = None
+            for p in parts:
+                if re.match(r'^\d{5}$', p.strip()): # Simple 5-digit check
+                     fallback_postcode = p.strip()
+                     break
+            
+            # If no postcode found in parts, try regex on city input or display_name
+            if not fallback_postcode:
+                 match = re.search(r'\b\d{5}\b', display_name)
+                 if match:
+                     fallback_postcode = match.group(0)
+
+            structured_admin = {
+                "country": fallback_country,
+                "state": fallback_state, # Use fallback state (which might be region) as state
+                "county": fallback_county,
+                "postcode": fallback_postcode,
+                "city": fallback_city
+            }
+            logger.info(f"📋 Fallback Structured Info: {structured_admin}")
 
         admin_info = {
             "display_name": display_name,

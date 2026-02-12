@@ -19,7 +19,7 @@ export async function submitCityRequest(
     const { error } = await supabase.from("requests").insert({
       city,
       country,
-      county: county || null,
+      county: county || city || null,
       state: state || null,
       postcode,
       status: "pending",
@@ -68,7 +68,7 @@ export async function searchCity(query: string) {
         optimizedQuery = `${city}, ${extractedPostcode}`;
         // If we have a country, append it for precision, unless it's the postcode itself
         if (potentialCountry && potentialCountry !== extractedPostcode) {
-           optimizedQuery += `, ${potentialCountry}`;
+          optimizedQuery += `, ${potentialCountry}`;
         }
       } else if (potentialCountry) {
         optimizedQuery = `${city}, ${potentialCountry}`;
