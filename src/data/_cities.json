@@ -57,9 +57,20 @@
   },
   {
     "id": "nantes",
+    "slug": "france-pays-de-la-loire-nantes",
     "name": "Nantes",
     "country": "France",
-    "image": "https://images.unsplash.com/photo-1597225729909-31db3b6bf1c7?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=600",
-    "coordinates": "47.2184°, 1.5536°"
+    "coordinates": "47.2382, -1.5603",
+    "admin_info": {
+      "structured": {
+        "country": "France",
+        "state": "Pays de la Loire",
+        "county": "Loire-Atlantique",
+        "postcode": null,
+        "city": "Nantes"
+      }
+    },
+    "last_updated": "2026-02-12T15:16:17.676535Z",
+    "status": "published"
   }
 ]
