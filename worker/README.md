@@ -13,47 +13,35 @@ Il utilise la librairie `maptoposter` (qui sera automatiquement installée/mise 
 
 Utilisez le script principal `main.py` qui gère tout pour vous (installation, mise à jour, dépendances, upload HF, git).
 
-### 1. Génération + Upload Hugging Face (Sans déploiement)
+### 1. Mode Surveillance (Production)
 
-Cette commande génère les cartes pour les villes listées dans le fichier JSON, les upload sur Hugging Face, et met à jour la base de données locale (`data/cities.json`), mais **ne pousse pas** les changements sur GitHub.
-
-```bash
-# Depuis la racine du projet
-python worker/main.py --source-json cities_to_process.json
-```
-
-### 2. Génération + Upload Hugging Face + Déploiement (Git Push)
-
-C'est la commande principale à utiliser pour la production. Elle fait tout comme la précédente, mais **pousse aussi** les changements (`data/cities.json`) sur GitHub, ce qui déclenche le redéploiement Vercel.
+C'est le mode principal à utiliser pour que le worker écoute Supabase en continu et traite les requêtes entrantes.
 
 ```bash
-# Depuis la racine du projet
-python worker/main.py --source-json cities_to_process.json --push
+# Lance le démon de surveillance
+python worker/main.py watch
 ```
 
-### 3. Génération unitaire (Test rapide)
+Ce mode :
 
-Pour tester une seule ville rapidement :
+- Vérifie les nouvelles requêtes toutes les 10 secondes.
+- Génère les cartes.
+- Upload sur Hugging Face.
+- Pousse automatiquement les mises à jour Git pour la base de données.
+
+### 2. Mode Test (Développement / One-Shot)
+
+Pour tester la génération d'une seule ville localement sans passer par Supabase.
 
 ```bash
-python worker/main.py --city "Nantes" --country "France" --theme "noir"
-```
+# Test simple
+python worker/main.py test "Nantes" "France"
 
-## Configuration du fichier JSON
+# Test avec code postal (plus précis)
+python worker/main.py test "Paris" "France" --postcode 75001
 
-Le fichier `cities_to_process.json` doit être à la racine du projet et suivre ce format :
-
-```json
-[
-  {
-    "name": "Paris",
-    "country": "France"
-  },
-  {
-    "name": "Lyon",
-    "country": "France"
-  }
-]
+# Test avec un thème spécifique et upload Git
+python worker/main.py test "Lyon" "France" --theme "noir" --push
 ```
 
 ## Résultat

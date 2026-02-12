@@ -68,8 +68,6 @@ FORMATS = {
     "Square_20x20": {"w": 20.0, "h": 20.0}, # 50.8 x 50.8 cm | Ratio 1.00
 }
 
-MAPTOPOSTER_REPO = "https://github.com/originalankur/maptoposter.git"
-
 HF_TOKEN = os.getenv("HF_TOKEN")
 HF_REPO_ID = os.getenv("HF_REPO_ID", "Baptiste/citypaper-maps")
 

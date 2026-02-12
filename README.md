@@ -108,10 +108,9 @@ nano .env.local
 To ensure the worker runs continuously and restarts automatically on crash or reboot, use PM2.
 
 ```bash
-# Start the worker with PM2
-# --worker: Enables polling loop
-# --push: Enables git push after generation
-pm2 start worker/main.py --name "citypaper-worker" --interpreter python3 -- --worker --push
+# Start the worker in watch mode
+# This will poll Supabase for new requests
+pm2 start worker/main.py --name "citypaper-worker" --interpreter python3 -- watch
 
 # Save the PM2 list to resurrect on reboot
 pm2 save

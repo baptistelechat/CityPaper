@@ -5,11 +5,12 @@ import time
 import subprocess
 from pathlib import Path
 from src.setup_env import ensure_maptoposter_installed, ensure_venv
-from src.map_generator import run_generation_for_city, clean_name
-# Defer imports of src.db, src.notify, src.git_ops to avoid ModuleNotFoundError before venv setup
+import os
 
 def build_location_string(admin_info: dict, fallback_city: str, fallback_country: str) -> str:
     """Builds a structured location string for commit messages."""
+    from src.map_generator import clean_name
+
     structured = admin_info.get('structured', {})
     if structured:
         parts = [
@@ -85,6 +86,7 @@ def process_batch(json_path: Path, worker_dir: Path, python_exe: str, maptoposte
             if search_city_param != city_name:
                 print(f"🎯 Using precise search query: '{search_city_param}' for '{city_name}'")
             
+            from src.map_generator import run_generation_for_city
             success, uploaded_urls, admin_info = run_generation_for_city(
                 search_city_param, country_name, python_exe, maptoposter_dir, worker_dir, 
                 args.theme, args.all_themes or True,
@@ -244,52 +246,60 @@ def run_worker_loop(python_exe: str, maptoposter_dir: Path, worker_dir: Path, ar
             time.sleep(5)
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate city maps using maptoposter")
-    parser.add_argument("--city", "-c", help="City name")
-    parser.add_argument("--country", "-C", help="Country name")
-    parser.add_argument("--theme", "-t", help="Specific theme (default: all themes if not specified)")
-    parser.add_argument("--all-themes", action="store_true", help="Generate maps for all available themes")
-    parser.add_argument("--display-city", "-dc", help="Explicit city name to display on the map (overrides auto-detection)")
-    parser.add_argument("--display-country", "-dC", help='Custom display name for country (e.g., "日本")')
-    parser.add_argument("--source-json", help="Path to cities.json for batch generation")
-    parser.add_argument("--push", action="store_true", help="Push changes to git remote")
-    parser.add_argument("--worker", "-w", action="store_true", help="Run in worker polling mode")
+    parser = argparse.ArgumentParser(description="Map Generator Worker")
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+
+    # Subcommand: watch
+    parser_watch = subparsers.add_parser('watch', help='Run in worker polling mode')
     
+    # Subcommand: test
+    parser_test = subparsers.add_parser('test', help='Test generation for a single city')
+    parser_test.add_argument("city", help="City name")
+    parser_test.add_argument("country", help="Country name")
+    parser_test.add_argument("--postcode", help="Optional postcode for precision")
+    parser_test.add_argument("--push", action="store_true", help="Push changes to git remote")
+    parser_test.add_argument("--theme", "-t", help="Specific theme")
+    parser_test.add_argument("--display-city", "-dc", help="Explicit city name to display")
+    parser_test.add_argument("--display-country", "-dC", help="Custom display name for country")
+
     args = parser.parse_args()
 
     # Determine paths
     worker_dir = Path(__file__).parent.absolute()
+    maptoposter_dir = worker_dir / "maptoposter"
+    script_path = maptoposter_dir / "create_map_poster.py"
 
-    # 0. Check Python version (Basic check)
+    # 0. Check Python version
     if sys.version_info < (3, 11):
         print("❌ Error: Python 3.11+ is required.")
         sys.exit(1)
 
-    maptoposter_dir = worker_dir / "maptoposter"
-    script_path = maptoposter_dir / "create_map_poster.py"
-
     # 1. Install / Update maptoposter
-    ensure_maptoposter_installed(maptoposter_dir)
+    # Only if we are not restarting from a parent process that already did it
+    is_restarted = os.getenv("CITYPAPER_WORKER_INIT_DONE") == "1"
+    
+    if not is_restarted:
+        ensure_maptoposter_installed(maptoposter_dir)
 
     # 2. Ensure venv and dependencies
-    python_exe = ensure_venv(worker_dir)
+    python_exe = ensure_venv(worker_dir, skip_install=is_restarted)
     
     # --- AUTO-RESTART IN VENV ---
     # Check if we are running with the venv python
     current_exe = Path(sys.executable).resolve()
     target_exe = Path(python_exe).resolve()
     
-    # On Windows, target_exe might be 'python.exe' and current might be 'Python.exe'
     if current_exe != target_exe:
-        # Avoid infinite loop if paths resolve differently but are same file (unlikely with venv)
-        # But if we are already in venv, sys.executable should point to it.
-        # However, if we run 'python worker/main.py', sys.executable is system python.
-        
         print(f"🔄 Restarting in virtual environment: {target_exe}")
         try:
             # We must use the script path as the first argument
             script_file = Path(__file__).absolute()
-            subprocess.run([str(target_exe), str(script_file), *sys.argv[1:]], check=True)
+            
+            # Pass a flag to indicate initialization is done
+            env = os.environ.copy()
+            env["CITYPAPER_WORKER_INIT_DONE"] = "1"
+            
+            subprocess.run([str(target_exe), str(script_file), *sys.argv[1:]], env=env, check=True)
             sys.exit(0)
         except subprocess.CalledProcessError as e:
             sys.exit(e.returncode)
@@ -302,38 +312,30 @@ def main():
         sys.exit(1)
         
     # From here on, we are in the venv, so we can import modules that depend on requirements.txt
-    from src.db import update_city_entry, get_db_path
-    from src.git_ops import commit_and_push_changes
-
-    # 3. Determine work mode
-    if args.worker:
+    
+    # 3. Determine work mode based on subcommand
+    if args.command == 'watch':
         run_worker_loop(python_exe, maptoposter_dir, worker_dir, args)
         
-    elif args.source_json:
-        json_path = Path(args.source_json)
-        if not json_path.exists():
-            project_root = worker_dir.parent
-            json_path_alt = project_root / args.source_json
-            if json_path_alt.exists():
-                json_path = json_path_alt
-            else:
-                print(f"❌ Error: JSON file not found at {json_path} or {json_path_alt}")
-                sys.exit(1)
+    elif args.command == 'test':
+        from src.map_generator import run_generation_for_city
         
-        process_batch(json_path, worker_dir, python_exe, maptoposter_dir, args)
-
-    else:
-        # Single city mode
-        if not args.city or not args.country:
-             print("❌ Error: --city and --country are required unless using --source-json or --worker")
-             sys.exit(1)
-             
+        # Construct search query with postcode if provided
+        search_query = args.city
+        if args.postcode:
+            search_query = f"{args.city} {args.postcode}"
+            
         success, uploaded_urls, admin_info = run_generation_for_city(
-            args.city, args.country, python_exe, maptoposter_dir, worker_dir, 
-            args.theme, args.all_themes, args.display_city, args.display_country
+            search_query, args.country, python_exe, maptoposter_dir, worker_dir, 
+            args.theme, True, args.display_city, args.display_country,
+            postcode_override=args.postcode
         )
         
         if success and uploaded_urls:
+             # Lazy import inside main execution block
+             from src.db import update_city_entry, get_db_path
+             from src.git_ops import commit_and_push_changes
+             
              update_city_entry(args.city, args.country, uploaded_urls, admin_info)
              
              # Build detailed location string for commit message
@@ -341,6 +343,10 @@ def main():
              
              db_path = get_db_path()
              commit_and_push_changes(db_path, f"🌍 Update data for {location_str}", push=args.push)
+    
+    else:
+        parser.print_help()
+
 
 if __name__ == "__main__":
     main()

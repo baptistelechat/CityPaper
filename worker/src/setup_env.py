@@ -1,9 +1,10 @@
 import sys
-import os
 import shutil
 import subprocess
 from pathlib import Path
-from .config import MAPTOPOSTER_REPO
+
+# Hardcoded repo URL to avoid importing config before venv setup
+MAPTOPOSTER_REPO = "https://github.com/originalankur/maptoposter.git"
 
 def apply_custom_patches(maptoposter_dir: Path):
     """
@@ -72,7 +73,7 @@ def ensure_maptoposter_installed(maptoposter_dir: Path):
     # Always apply patches after update/clone check
     apply_custom_patches(maptoposter_dir)
 
-def ensure_venv(worker_dir: Path) -> str:
+def ensure_venv(worker_dir: Path, skip_install: bool = False) -> str:
     """
     Ensures a virtual environment exists and dependencies are installed.
     Returns the path to the python executable within the venv.
@@ -101,13 +102,47 @@ def ensure_venv(worker_dir: Path) -> str:
 
     # 2. Install dependencies
     if requirements_file.exists():
-        print("🔄 Checking/Installing dependencies...")
-        try:
-            subprocess.run([str(python_exe), "-m", "pip", "install", "-r", str(requirements_file)], check=True)
-            print("✅ Dependencies installed.")
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error installing dependencies: {e}")
-            sys.exit(1)
+        if not skip_install:
+            marker_file = venv_dir / ".deps_installed"
+            should_install = True
+
+            if marker_file.exists():
+                # If marker is newer than requirements.txt, skip install
+                if marker_file.stat().st_mtime > requirements_file.stat().st_mtime:
+                    should_install = False
+
+            if should_install:
+                print("🔄 Checking/Installing dependencies...")
+                try:
+                    subprocess.run([str(python_exe), "-m", "pip", "install", "-r", str(requirements_file)], check=True)
+                    # Create/Update marker file
+                    marker_file.touch()
+                    print("✅ Dependencies installed.")
+                except subprocess.CalledProcessError as e:
+                    print(f"⚠️  Error installing dependencies: {e}")
+                    print("♻️  The virtual environment might be corrupted (bad python path). Re-creating...")
+                    
+                    # Nuke venv
+                    if venv_dir.exists():
+                        shutil.rmtree(venv_dir)
+                    
+                    # Re-create venv
+                    print(f"📦 Re-creating virtual environment at {venv_dir}...")
+                    try:
+                        subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
+                        print("✅ Virtual environment re-created.")
+                        
+                        # Retry install
+                        print("🔄 Retrying dependency install...")
+                        subprocess.run([str(python_exe), "-m", "pip", "install", "-r", str(requirements_file)], check=True)
+                        marker_file.touch()
+                        print("✅ Dependencies installed successfully on retry.")
+                        
+                    except subprocess.CalledProcessError as e2:
+                        print(f"❌ Fatal error installing dependencies: {e2}")
+                        sys.exit(1)
+            else:
+                print("✅ Dependencies up to date (skipping install).")
     else:
         print("⚠️  No requirements.txt found. Skipping dependency installation.")
 
