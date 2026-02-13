@@ -16,7 +16,23 @@ export const SELECTED_THEMES = [
   // "sunset",
   "terracotta",
   "warm_beige",
-];
+] as const;
+
+export type MapTheme = (typeof SELECTED_THEMES)[number];
+
+export const DEFAULT_THEME: MapTheme = "pastel_dream";
+
+export const getThemeLabel = (theme: string) => {
+  return theme
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
+export const MAP_THEMES = SELECTED_THEMES.map((theme) => ({
+  value: theme,
+  label: getThemeLabel(theme),
+}));
 
 export const FORMATS = {
   // ISO Formats (Standard: A3)

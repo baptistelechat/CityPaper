@@ -1,6 +1,7 @@
 import { getCityImageUrl } from "@/lib/city-utils";
-import { SELECTED_THEMES } from "@/lib/constants/config";
+import { DEFAULT_THEME } from "@/lib/constants/config";
 import { cn } from "@/lib/utils";
+import { useThemeStore } from "@/store/use-theme-store";
 import { City } from "@/types/city";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +12,10 @@ interface CityCardProps {
 }
 
 export function CityCard({ city, className }: CityCardProps) {
-  const imageUrl = city ? getCityImageUrl(city, SELECTED_THEMES[0]) : "";
+  const { currentTheme } = useThemeStore();
+
+  const activeTheme = currentTheme || DEFAULT_THEME;
+  const imageUrl = city ? getCityImageUrl(city, activeTheme) : "";
 
   return (
     <Link

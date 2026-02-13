@@ -1,22 +1,19 @@
 "use client";
 
 import { CityCard } from "@/components/city-card";
+import { CityCatalogControls } from "@/components/city-catalog-controls";
 import { RequestCityDialog } from "@/components/request-city-dialog";
-import { Input } from "@/components/ui/input";
+import { CityCatalogSkeleton } from "@/components/skeletons";
+import { useMounted } from "@/hooks/use-mounted";
 import type { City } from "@/types/city";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
 
 interface CityCatalogProps {
   cities: City[];
 }
 
 export function CityCatalog({ cities }: CityCatalogProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredCities = cities.filter((city) =>
-    city.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const mounted = useMounted();
 
   return (
     <>
@@ -26,52 +23,42 @@ export function CityCatalog({ cities }: CityCatalogProps) {
           Cartes minimalistes <br className="hidden md:block" /> pour vos murs
         </h1>
 
-        <div className="w-full max-w-md">
-          <Input
-            type="search"
-            placeholder="Rechercher votre ville..."
-            className="h-12 text-lg shadow-sm"
-            aria-label="Rechercher une ville"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="flex flex-col w-full gap-4">
+          <CityCatalogControls cities={cities}>
+            {(filteredCities) =>
+              !mounted ? (
+                <CityCatalogSkeleton />
+              ) : (
+                <div className="container mx-auto grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                  <AnimatePresence>
+                    {filteredCities.map((city) => (
+                      <motion.div
+                        key={city.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.2 }}
+                        layout
+                      >
+                        <CityCard city={city} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )
+            }
+          </CityCatalogControls>
         </div>
       </section>
 
-      {/* Grid Section */}
-      <section className="container mx-auto px-4 pb-24 md:px-6">
-        <motion.div
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8"
-          layout
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredCities.map((city) => (
-              <motion.div
-                key={city.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-              >
-                <CityCard city={city} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        {filteredCities.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-12"
-          >
-            <p className="text-xl text-muted-foreground mb-6">
-              Aucune ville trouvée
-            </p>
-            <RequestCityDialog />
-          </motion.div>
-        )}
+      {/* Request City Section */}
+      <section className="bg-muted/30 py-20">
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
+          <h2 className="text-2xl font-bold">
+            Vous ne trouvez pas votre ville ?
+          </h2>
+          <RequestCityDialog />
+        </div>
       </section>
     </>
   );
