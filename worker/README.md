@@ -19,7 +19,7 @@ C'est le mode principal à utiliser pour que le worker écoute Supabase en conti
 
 ```bash
 # Lance le démon de surveillance
-python worker/main.py watch
+python worker/main.py watch --push
 ```
 
 Ce mode :

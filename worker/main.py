@@ -266,6 +266,7 @@ def main():
 
     # Subcommand: watch
     parser_watch = subparsers.add_parser('watch', help='Run in worker polling mode')
+    parser_watch.add_argument("--push", action="store_true", help="Push changes to git remote")
     
     # Subcommand: test
     parser_test = subparsers.add_parser('test', help='Test generation for a single city')

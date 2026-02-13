@@ -1,6 +1,7 @@
 import json
 import os
 import uuid
+import unicodedata
 from pathlib import Path
 from datetime import datetime, timezone
 from supabase import create_client, Client
@@ -38,6 +39,18 @@ def save_db(data):
 def clean_name(n):
     if not n: return ""
     return "".join([c if c.isalnum() or c in (' ', '-', '_') else '_' for c in n]).strip()
+
+def slugify(value):
+    """
+    Normalizes string, converts to lowercase, removes non-alpha characters,
+    and converts spaces to hyphens.
+    """
+    if not value: return ""
+    # Normalize unicode characters (accents)
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    # Clean non-alphanumeric (allow spaces, hyphens, underscores)
+    value = "".join([c if c.isalnum() or c in (' ', '-', '_') else '_' for c in value])
+    return value.strip().lower().replace(" ", "-")
 
 def update_city_entry(city_name, country_name, admin_info, uploaded_urls=None, request_id=None):
     """
@@ -80,16 +93,16 @@ def update_city_entry(city_name, country_name, admin_info, uploaded_urls=None, r
     s_postcode = structured.get("postcode")
     s_city = structured.get("city") or city_name
     
-    if s_country: slug_parts.append(clean_name(s_country).lower().replace(" ", "-"))
-    if s_state: slug_parts.append(clean_name(s_state).lower().replace(" ", "-"))
-    if s_county: slug_parts.append(clean_name(s_county).lower().replace(" ", "-"))
-    if s_postcode: slug_parts.append(clean_name(s_postcode).lower().replace(" ", "-"))
-    if s_city: slug_parts.append(clean_name(s_city).lower().replace(" ", "-"))
+    if s_country: slug_parts.append(slugify(s_country))
+    if s_state: slug_parts.append(slugify(s_state))
+    if s_county: slug_parts.append(slugify(s_county))
+    if s_postcode: slug_parts.append(slugify(s_postcode))
+    if s_city: slug_parts.append(slugify(s_city))
     
     slug = "-".join([p for p in slug_parts if p])
     if not slug:
         # Fallback
-        slug = f"{clean_name(country_name)}-{clean_name(city_name)}".lower().replace(" ", "-")
+        slug = f"{slugify(country_name)}-{slugify(city_name)}"
 
     # Determine ID (Use slug as ID)
     entry_id = slug

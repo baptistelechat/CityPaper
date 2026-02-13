@@ -49,16 +49,16 @@ Make sure you have **Node.js** and **PNPM** installed.
 
 1. **Clone the project**
 
-    ```bash
-    # 1. Clone the repository
-    git clone https://github.com/baptistelechat/CityPaper.git
-    cd CityPaper
+   ```bash
+   # 1. Clone the repository
+   git clone https://github.com/baptistelechat/CityPaper.git
+   cd CityPaper
 
-    # 2. Setup Environment Variables
-    # Create .env.local and fill in SUPABASE_URL, SUPABASE_KEY, HF_TOKEN, etc.
-    cp .env.example .env.local
-    nano .env.local
-    ```
+   # 2. Setup Environment Variables
+   # Create .env.local and fill in SUPABASE_URL, SUPABASE_KEY, HF_TOKEN, etc.
+   cp .env.example .env.local
+   nano .env.local
+   ```
 
 2. **Install dependencies**
 
@@ -110,7 +110,8 @@ To ensure the worker runs continuously and restarts automatically on crash or re
 ```bash
 # Start the worker in watch mode
 # This will poll Supabase for new requests
-pm2 start worker/main.py --name "citypaper-worker" --interpreter python3 -- watch
+# --push is required to push changes to git remote (GitHub)
+pm2 start worker/main.py --name "citypaper-worker" --interpreter python3 -- watch --push
 
 # Save the PM2 list to resurrect on reboot
 pm2 save
@@ -146,7 +147,6 @@ This project follows defined code standards:
 - **Clean Code**: Explicit variables, short functions, and strict typing.
 
 ---
-
 
 ## 😸 Maintainers
 
