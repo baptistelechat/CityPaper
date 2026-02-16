@@ -66,7 +66,7 @@ def calculate_bounds(city, country):
             for attempt in range(3):
                 try:
                     # Use the center point to reverse geocode or use the query again
-                    location = geolocator.geocode(query, addressdetails=True)
+                    location = geolocator.geocode(query, addressdetails=True, language='fr')
                     if location:
                         break
                 except Exception as retry_err:
