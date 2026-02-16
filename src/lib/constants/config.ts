@@ -72,3 +72,13 @@ export const FORMATS = {
   // Ratio: 1.00
   Square_20x20: { w: 20.0, h: 20.0 }, // 50.8 x 50.8 cm | Ratio 1.00
 };
+
+export const DEFAULT_FORMAT: keyof typeof FORMATS = "ISO_A3_Portrait";
+
+export const getFormatLabel = (key: string) => {
+  const format = FORMATS[key as keyof typeof FORMATS];
+  if (!format) return key;
+  // Convert underscores to spaces and add dimensions
+  const name = key.replace(/_/g, " ");
+  return `${name} (${format.w}x${format.h}")`;
+};

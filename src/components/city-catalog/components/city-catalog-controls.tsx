@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button } from "@/components/ui/button";
+import { ResetFiltersButton } from "@/components/reset-filters-button";
+import { ThemeSelector } from "@/components/theme-selector";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,10 +9,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCityFilters } from "@/hooks/use-city-filters";
-import { DEFAULT_THEME, MAP_THEMES } from "@/lib/constants/config";
+import { DEFAULT_THEME } from "@/lib/constants/config";
 import { useThemeStore } from "@/store/use-theme-store";
 import type { City } from "@/types/city";
-import { RotateCcw, X } from "lucide-react";
+import { X } from "lucide-react";
 import { ReactNode } from "react";
 
 interface CityCatalogControlsProps {
@@ -24,7 +24,7 @@ export function CityCatalogControls({
   cities,
   children,
 }: CityCatalogControlsProps) {
-  const { currentTheme, setTheme } = useThemeStore();
+  const { currentTheme } = useThemeStore();
 
   const {
     searchQuery,
@@ -43,12 +43,13 @@ export function CityCatalogControls({
   } = useCityFilters(cities);
 
   const filteredCount = filteredCities.length;
-  const isFiltered =
+  const isFiltered = Boolean(
     searchQuery ||
     selectedCountry !== "all" ||
     selectedRegion !== "all" ||
     selectedDepartment !== "all" ||
-    currentTheme !== DEFAULT_THEME;
+    currentTheme !== DEFAULT_THEME,
+  );
 
   return (
     <div className="flex flex-col w-full gap-8">
@@ -132,34 +133,10 @@ export function CityCatalogControls({
               </SelectContent>
             </Select>
 
-            <Select
-              value={currentTheme}
-              onValueChange={(val) => setTheme(val as any)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Thème" />
-              </SelectTrigger>
-              <SelectContent>
-                {MAP_THEMES.map((theme) => (
-                  <SelectItem key={theme.value} value={theme.value}>
-                    {theme.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <ThemeSelector />
           </div>
 
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={resetFilters}
-            disabled={!isFiltered}
-            className="shrink-0 w-full lg:w-10"
-            title="Réinitialiser les filtres"
-          >
-            <RotateCcw className="h-4 w-4" />
-            <span className="lg:hidden ml-2">Réinitialiser</span>
-          </Button>
+          <ResetFiltersButton onReset={resetFilters} isFiltered={isFiltered} />
         </div>
       </div>
 

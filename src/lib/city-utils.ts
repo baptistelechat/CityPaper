@@ -1,9 +1,10 @@
 import { City } from "@/types/city";
+import { DEFAULT_FORMAT } from "./constants/config";
 
 export function getCityImageUrl(
   city: City,
   theme: string,
-  format: string = "ISO_A3_Portrait",
+  format: string = DEFAULT_FORMAT,
 ): string {
   const base_url =
     "https://huggingface.co/datasets/baptistelechat/citypaper-maps/resolve/main";

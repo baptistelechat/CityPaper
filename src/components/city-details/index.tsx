@@ -1,26 +1,61 @@
 "use client";
 
-import { DownloadButton } from "./components/download-button";
-import { CityDetailsSkeleton } from "@/components/skeletons";
+import { FormatSelector } from "@/components/format-selector";
+import { ThemeSelector } from "@/components/theme-selector";
 import { Button } from "@/components/ui/button";
 import { useMounted } from "@/hooks/use-mounted";
 import { getCityImageUrl } from "@/lib/city-utils";
-import { DEFAULT_THEME, getThemeLabel } from "@/lib/constants/config";
+import { DEFAULT_FORMAT, DEFAULT_THEME, FORMATS } from "@/lib/constants/config";
 import { getCountryCode } from "@/lib/country-utils";
+import { useFormatStore } from "@/store/use-format-store";
 import { useThemeStore } from "@/store/use-theme-store";
 import type { City } from "@/types/city";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { ResetFiltersButton } from "../reset-filters-button";
+import { CityDetailsSkeleton } from "../skeletons";
 import { CityDetailsBadges } from "./components/city-details-badges";
+import { DownloadButton } from "./components/download-button";
 
 interface CityDetailsProps {
   city: City;
   suggestedCities: City[];
 }
 
+function CityImagePreview({
+  imageUrl,
+  alt,
+}: {
+  imageUrl: string;
+  alt: string;
+}) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <>
+      {isLoading && (
+        <div className="absolute inset-0 bg-muted animate-pulse z-10" />
+      )}
+      <Image
+        src={imageUrl}
+        alt={alt}
+        fill
+        priority
+        className={`object-cover transition-all duration-500 ${
+          isLoading ? "scale-105 blur-sm" : "scale-100 blur-0"
+        }`}
+        sizes="(max-width: 768px) 100vw, 50vw"
+        onLoadingComplete={() => setIsLoading(false)}
+      />
+    </>
+  );
+}
+
 export function CityDetails({ city, suggestedCities }: CityDetailsProps) {
   const { currentTheme } = useThemeStore();
+  const { currentFormat } = useFormatStore();
   const mounted = useMounted();
 
   // Show Skeleton Loader until mounted to prevent theme flash
@@ -29,21 +64,27 @@ export function CityDetails({ city, suggestedCities }: CityDetailsProps) {
   }
 
   const activeTheme = currentTheme || DEFAULT_THEME;
-  const imageUrl = getCityImageUrl(city, activeTheme);
+  const activeFormat = currentFormat || DEFAULT_FORMAT;
+  const imageUrl = getCityImageUrl(city, activeTheme, activeFormat);
   const countryCode = getCountryCode(city.country);
+
+  // Calculate aspect ratio
+  const formatData =
+    FORMATS[activeFormat as keyof typeof FORMATS] || FORMATS[DEFAULT_FORMAT];
+  const aspectRatio = formatData.w / formatData.h;
 
   return (
     <div className="mx-auto max-w-6xl w-full">
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 items-center">
         {/* Image Section */}
-        <div className="relative aspect-5/7 w-full overflow-hidden bg-muted shadow-2xl">
-          <Image
-            src={imageUrl}
+        <div
+          className="relative w-full overflow-hidden bg-muted shadow-2xl transition-all duration-500 ease-in-out"
+          style={{ aspectRatio }}
+        >
+          <CityImagePreview
+            key={imageUrl}
+            imageUrl={imageUrl}
             alt={`${city.name} - CityPaper`}
-            fill
-            priority
-            className="object-cover transition-all duration-500"
-            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
 
@@ -74,21 +115,23 @@ export function CityDetails({ city, suggestedCities }: CityDetailsProps) {
                 Télécharger l&apos;affiche
               </h3>
               <div className="flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <ThemeSelector className="flex-1" />
+                  <FormatSelector className="flex-1" />
+                  <ResetFiltersButton
+                    className="w-full sm:w-10 shrink-0"
+                    labelClassName="sm:hidden"
+                  />
+                </div>
+
                 <DownloadButton
                   url={imageUrl}
-                  filename={`${city.name.toLowerCase()}-poster-${activeTheme}.jpg`}
-                  label="Télécharger PDF (Print)"
-                />
-                <DownloadButton
-                  url={imageUrl}
-                  filename={`${city.name.toLowerCase()}-wallpaper-${activeTheme}.jpg`}
-                  label="Télécharger Wallpaper"
-                  variant="outline"
+                  filename={`${city.name.toLowerCase()}-poster-${activeTheme}-${activeFormat}.jpg`}
+                  label="Télécharger"
                 />
               </div>
               <p className="mt-6 text-xs text-muted-foreground border-t border-border/50 pt-4">
-                Licence : ODbL (OpenStreetMap) • Thème :{" "}
-                {getThemeLabel(activeTheme)}
+                Licence : ODbL (OpenStreetMap)
               </p>
             </div>
           </div>
