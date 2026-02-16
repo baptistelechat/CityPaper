@@ -1,6 +1,7 @@
 import { SiteFooter } from "@/components/site-footer";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "flag-icons/css/flag-icons.min.css";
 import "./globals.css";
 import { Toaster } from "sonner";
 

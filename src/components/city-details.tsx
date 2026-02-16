@@ -12,6 +12,7 @@ import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { CityDetailsBadges } from "./city-details-badges";
+import { getCountryCode } from "@/lib/country-utils";
 
 interface CityDetailsProps {
   city: City;
@@ -29,6 +30,7 @@ export function CityDetails({ city, suggestedCities }: CityDetailsProps) {
 
   const activeTheme = currentTheme || DEFAULT_THEME;
   const imageUrl = getCityImageUrl(city, activeTheme);
+  const countryCode = getCountryCode(city.country);
 
   return (
     <div className="mx-auto max-w-6xl w-full">
@@ -51,7 +53,10 @@ export function CityDetails({ city, suggestedCities }: CityDetailsProps) {
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl uppercase">
               {city.name}
             </h1>
-            <p className="mt-2 text-xl text-muted-foreground uppercase tracking-wider">
+            <p className="mt-2 text-xl text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+              {countryCode && (
+                <span className={`fi fi-${countryCode} rounded-sm shadow-sm`} />
+              )}
               {city.country}
             </p>
             <p className="mt-1 text-sm text-muted-foreground/80 font-mono">

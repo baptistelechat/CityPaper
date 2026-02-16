@@ -10,7 +10,6 @@ export const CityDetailsBadges = ({ city }: { city: City }) => {
 
   return (
     <div className="flex flex-wrap gap-2 mt-4">
-      {data?.country && <Badge variant="secondary">{data.country}</Badge>}
       {data?.state && <Badge variant="outline">{data.state}</Badge>}
       {data?.county && <Badge variant="outline">{data.county}</Badge>}
     </div>
