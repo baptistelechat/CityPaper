@@ -1,5 +1,5 @@
 import { CityDetails } from "@/components/city-details";
-import { RequestCityDialog } from "@/components/request-city-dialog";
+import { RequestCityDialog } from "@/components/features/request-city-dialog";
 import { Button } from "@/components/ui/button";
 import cities from "@/data/cities.json";
 import { ArrowLeft } from "lucide-react";

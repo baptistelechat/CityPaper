@@ -1,18 +1,18 @@
 "use client";
 
-import { DownloadButton } from "@/components/download-button";
+import { DownloadButton } from "./components/download-button";
 import { CityDetailsSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { useMounted } from "@/hooks/use-mounted";
 import { getCityImageUrl } from "@/lib/city-utils";
 import { DEFAULT_THEME, getThemeLabel } from "@/lib/constants/config";
+import { getCountryCode } from "@/lib/country-utils";
 import { useThemeStore } from "@/store/use-theme-store";
 import type { City } from "@/types/city";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { CityDetailsBadges } from "./city-details-badges";
-import { getCountryCode } from "@/lib/country-utils";
+import { CityDetailsBadges } from "./components/city-details-badges";
 
 interface CityDetailsProps {
   city: City;

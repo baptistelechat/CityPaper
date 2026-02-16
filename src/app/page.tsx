@@ -1,5 +1,5 @@
 import { CityCatalog } from "@/components/city-catalog";
-import { RequestCityDialog } from "@/components/request-city-dialog";
+import { RequestCityDialog } from "@/components/features/request-city-dialog";
 import { Button } from "@/components/ui/button";
 import cities from "@/data/cities.json";
 
@@ -11,13 +11,7 @@ export default function Home() {
         <div className="text-xl font-black uppercase tracking-widest">
           CityPaper
         </div>
-        <RequestCityDialog
-          trigger={
-            <Button>
-              Demander une ville
-            </Button>
-          }
-        />
+        <RequestCityDialog trigger={<Button>Demander une ville</Button>} />
       </header>
 
       <main className="flex-1">

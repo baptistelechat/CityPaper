@@ -1,12 +1,12 @@
 "use client";
 
-import { CityCard } from "@/components/city-card";
-import { CityCatalogControls } from "@/components/city-catalog-controls";
-import { RequestCityDialog } from "@/components/request-city-dialog";
+import { RequestCityDialog } from "@/components/features/request-city-dialog";
 import { CityCatalogSkeleton } from "@/components/skeletons";
 import { useMounted } from "@/hooks/use-mounted";
 import type { City } from "@/types/city";
 import { AnimatePresence, motion } from "framer-motion";
+import { CityCard } from "./components/city-card";
+import { CityCatalogControls } from "./components/city-catalog-controls";
 
 interface CityCatalogProps {
   cities: City[];

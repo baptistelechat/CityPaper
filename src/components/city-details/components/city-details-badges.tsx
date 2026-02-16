@@ -1,5 +1,5 @@
 import { City } from "@/types/city";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 export const CityDetailsBadges = ({ city }: { city: City }) => {
   const data = city.admin_info?.structured;
