@@ -11,6 +11,7 @@ import type { City } from "@/types/city";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CityDetailsBadges } from "./city-details-badges";
 
 interface CityDetailsProps {
   city: City;
@@ -59,6 +60,7 @@ export function CityDetails({ city, suggestedCities }: CityDetailsProps) {
                 .map((coord) => coord.trim() + "°")
                 .join(", ")}
             </p>
+            <CityDetailsBadges city={city} />
           </div>
 
           <div className="space-y-4">
