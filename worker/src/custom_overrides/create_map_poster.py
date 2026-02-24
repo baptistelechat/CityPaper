@@ -749,17 +749,20 @@ def create_poster(
 
     # --- ATTRIBUTION (bottom right) ---
     if FONTS:
-        font_attr = FontProperties(fname=FONTS["light"], size=8)
+        # Use regular font for the logo part to keep it clean
+        font_attr = FontProperties(fname=FONTS["light"], size=8 * scale_factor)
     else:
-        font_attr = FontProperties(family="monospace", size=8)
+        font_attr = FontProperties(family="monospace", weight="normal", size=8 * scale_factor)
+
+    attribution_text = "CITYPAPER - © OpenStreetMap contributors"
 
     ax.text(
         0.98,
         0.02,
-        "© OpenStreetMap contributors",
+        attribution_text,
         transform=ax.transAxes,
         color=THEME["text"],
-        alpha=0.5,
+        alpha=0.7,
         ha="right",
         va="bottom",
         fontproperties=font_attr,
