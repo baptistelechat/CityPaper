@@ -135,8 +135,12 @@ export function CityCatalogControls({
 
             <ThemeSelector />
           </div>
-
-          <ResetFiltersButton onReset={resetFilters} isFiltered={isFiltered} />
+          <ResetFiltersButton
+            onReset={resetFilters}
+            isFiltered={isFiltered}
+            className="w-full sm:w-10 shrink-0"
+            labelClassName="sm:hidden"
+          />
         </div>
       </div>
 
