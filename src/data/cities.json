@@ -202,5 +202,39 @@
     },
     "last_updated": "2026-03-06T10:55:05.760995Z",
     "status": "published"
+  },
+  {
+    "id": "france-normandie-seine-maritime-76000-rouen",
+    "name": "Rouen",
+    "country": "France",
+    "coordinates": "49.4412, 1.0911",
+    "admin_info": {
+      "structured": {
+        "country": "France",
+        "state": "Normandie",
+        "county": "Seine-Maritime",
+        "postcode": "76000",
+        "city": "Rouen"
+      }
+    },
+    "last_updated": "2026-03-06T12:29:16.180295Z",
+    "status": "published"
+  },
+  {
+    "id": "france-centre-val-de-loire-loiret-41000-orleans",
+    "name": "Orléans",
+    "country": "France",
+    "coordinates": "47.8734, 1.9122",
+    "admin_info": {
+      "structured": {
+        "country": "France",
+        "state": "Centre-Val de Loire",
+        "county": "Loiret",
+        "postcode": "41000",
+        "city": "Orléans"
+      }
+    },
+    "last_updated": "2026-03-06T12:49:28.393783Z",
+    "status": "published"
   }
 ]
