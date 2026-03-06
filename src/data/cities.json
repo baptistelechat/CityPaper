@@ -98,7 +98,7 @@
         "city": "Lille"
       }
     },
-    "last_updated": "2026-02-24T16:31:43.762191Z",
+    "last_updated": "2026-03-06T12:12:18.652424Z",
     "status": "published"
   },
   {
@@ -115,7 +115,7 @@
         "city": "Strasbourg"
       }
     },
-    "last_updated": "2026-02-24T16:45:07.905649Z",
+    "last_updated": "2026-03-06T11:41:16.343045Z",
     "status": "published"
   },
   {
@@ -150,6 +150,57 @@
       }
     },
     "last_updated": "2026-02-24T17:08:35.331735Z",
+    "status": "published"
+  },
+  {
+    "id": "france-bourgogne-franche-comte-cote-d_or-21000-dijon",
+    "name": "Dijon",
+    "country": "France",
+    "coordinates": "47.3319, 5.0323",
+    "admin_info": {
+      "structured": {
+        "country": "France",
+        "state": "Bourgogne-Franche-Comté",
+        "county": "Côte-d'Or",
+        "postcode": "21000",
+        "city": "Dijon"
+      }
+    },
+    "last_updated": "2026-03-06T10:08:05.347382Z",
+    "status": "published"
+  },
+  {
+    "id": "france-bretagne-ille-et-vilaine-35000-rennes",
+    "name": "Rennes",
+    "country": "France",
+    "coordinates": "48.1159, -1.6885",
+    "admin_info": {
+      "structured": {
+        "country": "France",
+        "state": "Bretagne",
+        "county": "Ille-et-Vilaine",
+        "postcode": "35000",
+        "city": "Rennes"
+      }
+    },
+    "last_updated": "2026-03-06T10:41:20.544958Z",
+    "status": "published"
+  },
+  {
+    "id": "france-corse-corse-du-sud-20000-ajaccio",
+    "name": "Ajaccio",
+    "country": "France",
+    "coordinates": "41.9255, 8.7058",
+    "admin_info": {
+      "structured": {
+        "country": "France",
+        "state": "Corse",
+        "county": "Corse-du-Sud",
+        "postcode": "20000",
+        "city": "Ajaccio"
+      }
+    },
+    "last_updated": "2026-03-06T10:55:05.760995Z",
     "status": "published"
   }
 ]
